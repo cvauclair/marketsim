@@ -16,7 +16,7 @@ set(CMAKE_AUTOUIC ON)
 # Find the QtWidgets library
 find_package(Qt5Widgets CONFIG REQUIRED)
 
-#include_directories(src)
+include_directories(src)
 
 set(exchangeSRCS
 	"src/exchange/account.cpp"
@@ -29,6 +29,11 @@ set(exchangeSRCS
 	"src/exchange/utility.cpp"
 )
 
+set(simulationSRCS
+	"src/simulation/agent.cpp"
+	"src/simulation/simulation.cpp"
+)
+
 set(guiSRCS
 	"src/gui/mainwindow.ui"
 	"src/gui/mainwindow.cpp"
@@ -39,7 +44,9 @@ set(marketsimSRCS
 )
 
 add_library(exchange SHARED ${exchangeSRCS})
-target_link_libraries(exchange)
+
+add_library(simulation SHARED ${simulationSRCS})
+target_link_libraries(simulation exchange)
 
 add_library(gui SHARED ${guiSRCS})
 target_link_libraries(gui Qt5::Widgets)

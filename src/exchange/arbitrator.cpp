@@ -36,7 +36,7 @@ void Arbitrator::resolveOffers()
 	std::vector<Offer> &bids = this->stock_->getBids();
 
 	// Check if there are traded to make
-	if(this->stock_->getAsks().size() == 0 || this->stock_->getBids().size() == 0){
+	if(asks.size() == 0 || bids.size() == 0){
 		return;
 	}
 
@@ -46,14 +46,18 @@ void Arbitrator::resolveOffers()
 
 	// Order matching
 	while(sameRate(bids.back().price, asks.back().price)){
-		this->trade(&this->stock_->getBids().back(), &this->stock_->getAsks().back());
+		this->trade(&bids.back(), &asks.back());
 
 		// Pop back if fulfilled
-		if(this->stock_->getBids().back().quantity <= 0){
-			this->stock_->getBids().pop_back();
+		if(bids.back().quantity <= 0){
+			bids.pop_back();
 		}
-		if(this->stock_->getAsks().back().quantity <= 0){
-			this->stock_->getAsks().pop_back();
+		if(asks.back().quantity <= 0){
+			asks.pop_back();
+		}
+
+		if(asks.size() == 0 || bids.size() == 0){
+			break;
 		}
 	}
 }

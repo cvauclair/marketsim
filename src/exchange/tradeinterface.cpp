@@ -14,8 +14,7 @@ void TradeInterface::buy(const std::string &symbol, unsigned int quantity, float
 	}
 
 	// Add offer to stock
-	Stock &stock = this->exchange_->getStock(symbol);
-	stock.addBid(quantity, price, this->account_);
+	this->exchange_->buyShares(this->account_->getId(), symbol, quantity, price);
 }
 
 void TradeInterface::sell(const std::string &symbol, unsigned int quantity, float price)
@@ -26,8 +25,7 @@ void TradeInterface::sell(const std::string &symbol, unsigned int quantity, floa
 	}
 
 	// Add offer to currency pair
-	Stock &stock = this->exchange_->getStock(symbol);
-	stock.addAsk(quantity, price, this->account_);
+	this->exchange_->sellShares(this->account_->getId(), symbol, quantity, price);
 }
 
 Account &TradeInterface::getAccount()

@@ -27,30 +27,21 @@ float Account::getBalance()
 
 void Account::addShares(const std::string &symbol, unsigned int quantity)
 {
-	try {
-		this->portfolio_.at(symbol) += quantity;
-	} catch (std::exception &e) {
-		throw std::runtime_error("Error: Invalid currency symbol " + symbol);
-	}
+	this->portfolio_[symbol] += quantity;
 }
 
 void Account::removeShares(const std::string &symbol, unsigned int quantity)
 {
-	if(this->portfolio_.find(symbol) != this->portfolio_.end()){
-		if(this->portfolio_.at(symbol) >= quantity){
-			this->portfolio_.at(symbol) -= quantity;
-		}else {
-			throw std::runtime_error("Error: Insufficient funds");
-		}
-	}else{
-		throw std::runtime_error("Error: Invalid currency symbol " + symbol);
+	if(this->portfolio_[symbol] < quantity){
+		throw std::runtime_error("Error: Insufficient shares");
 	}
+	this->portfolio_[symbol] -= quantity;
 }
 
 unsigned int Account::getShares(const std::string &symbol)
 {
 	if(this->portfolio_.find(symbol) == this->portfolio_.end()){
-		throw std::runtime_error("Error: Invalid currency symbol " + symbol);
+		throw std::runtime_error("Error: Invalid stock symbol " + symbol);
 	}
 	return this->portfolio_[symbol];
 }

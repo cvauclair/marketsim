@@ -5,8 +5,8 @@
 #include <string>
 
 static const std::vector<std::string> SYMBOLS = {
-    "AAPL",
-    "INTC"
+    "AAPL"
+//    "INTC"
 };
 
 #endif

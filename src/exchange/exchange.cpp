@@ -12,11 +12,19 @@ Exchange::Exchange()
 
 		Logger::log("debug", "Stock " + symbol + " added", true);
 	}
+
+	// Start arbitrators
+	for(Arbitrator &arbitrator : this->arbitrators_){
+		arbitrator.start();
+	}
 }
 
 Exchange::~Exchange()
 {
-
+	// Stop arbitrators
+	for(Arbitrator &arbitrator : this->arbitrators_){
+		arbitrator.stop();
+	}
 }
 
 Account &Exchange::createAccount()
@@ -26,6 +34,66 @@ Account &Exchange::createAccount()
 	return this->accounts_[newAccount.getId()];
 }
 
+void Exchange::addShares(unsigned int accountId, const std::string &symbol, unsigned int quantity)
+{
+	if(!this->validAccounId(accountId)){
+		throw std::runtime_error("Error: Invalid account id " + std::to_string(accountId));
+	}
+
+	if(!this->validStockSymbol(symbol)){
+		throw std::runtime_error("Error: Invalid stock symbol " + symbol);
+	}
+
+	this->accounts_[accountId].addShares(symbol, quantity);
+}
+
+void Exchange::removeShares(unsigned int accountId, const std::string &symbol, unsigned int quantity)
+{
+	if(!this->validAccounId(accountId)){
+		throw std::runtime_error("Error: Invalid account id " + std::to_string(accountId));
+	}
+
+	if(!this->validStockSymbol(symbol)){
+		throw std::runtime_error("Error: Invalid stock symbol " + symbol);
+	}
+
+	this->accounts_[accountId].removeShares(symbol, quantity);
+}
+
+void Exchange::buyShares(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price)
+{
+	if(!this->validAccounId(accountId)){
+		throw std::runtime_error("Error: Invalid account id " + std::to_string(accountId));
+	}
+
+	if(!this->validStockSymbol(symbol)){
+		throw std::runtime_error("Error: Invalid stock symbol " + symbol);
+	}
+
+	this->stocks_[symbol].addBid(quantity, price, &(this->accounts_[accountId]));
+}
+
+void Exchange::sellShares(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price)
+{
+	if(!this->validAccounId(accountId)){
+		throw std::runtime_error("Error: Invalid account id " + std::to_string(accountId));
+	}
+
+	if(!this->validStockSymbol(symbol)){
+		throw std::runtime_error("Error: Invalid stock symbol " + symbol);
+	}
+
+	this->stocks_[symbol].addAsk(quantity, price, &(this->accounts_[accountId]));
+}
+
+bool Exchange::validAccounId(unsigned int accountId)
+{
+	if(this->accounts_.find(accountId) != this->accounts_.end()){
+		return true;
+	}
+	return false;
+}
+
 Stock &Exchange::getStock(const std::string &symbol)
 {
 	if(this->stocks_.find(symbol) != this->stocks_.end()){
@@ -33,4 +101,12 @@ Stock &Exchange::getStock(const std::string &symbol)
 	}else{
 		throw std::runtime_error("Error: Invalid stock symbol " + symbol);
 	}
+}
+
+bool Exchange::validStockSymbol(const std::string &symbol)
+{
+	if(this->stocks_.find(symbol) != this->stocks_.end()){
+		return true;
+	}
+	return false;
 }

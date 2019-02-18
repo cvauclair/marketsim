@@ -3,6 +3,8 @@
 
 #include "account.h"
 
+#define CURRENT 0.0
+
 // The Offer class represents a bid or ask offer for a certain currency.
 // The desired currency in question (as well as the currency that will be used
 // to buy the latter) are implicitely determined from the CurrencyPair in which

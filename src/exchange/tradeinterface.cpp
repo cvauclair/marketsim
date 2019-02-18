@@ -28,7 +28,6 @@ void TradeInterface::sell(const std::string &symbol, unsigned int quantity, floa
 	// Add offer to currency pair
 	Stock &stock = this->exchange_->getStock(symbol);
 	stock.addAsk(quantity, price, this->account_);
-
 }
 
 Account &TradeInterface::getAccount()

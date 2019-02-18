@@ -14,6 +14,18 @@ Exchange::Exchange()
 	}
 }
 
+Exchange::~Exchange()
+{
+
+}
+
+Account &Exchange::createAccount()
+{
+	Account newAccount;
+	this->accounts_[newAccount.getId()] = newAccount;
+	return this->accounts_[newAccount.getId()];
+}
+
 Stock &Exchange::getStock(const std::string &symbol)
 {
 	if(this->stocks_.find(symbol) != this->stocks_.end()){

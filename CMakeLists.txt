@@ -45,4 +45,4 @@ add_library(gui SHARED ${guiSRCS})
 target_link_libraries(gui Qt5::Widgets)
 
 add_executable(marketsim ${marketsimSRCS})
-target_link_libraries(marketsim gui Qt5::Widgets)
+target_link_libraries(marketsim exchange gui Qt5::Widgets)

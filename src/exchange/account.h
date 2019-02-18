@@ -8,7 +8,7 @@
 class Account{
 	public:
 		// Creates new account
-		Account(unsigned int accountId = 0);
+		Account();
 
 		unsigned int getId();
 
@@ -26,6 +26,8 @@ class Account{
 
 
 	private:
+		static unsigned int accountCounter;
+
 		std::unordered_map<std::string, unsigned int> portfolio_;
 		float balance_ = 0.0f;
 		unsigned int accountId_ = 0;

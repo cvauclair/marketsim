@@ -6,12 +6,12 @@
 #include <mutex>
 
 #include "offer.h"
+#include "logger.h"
 
 class Stock{
 	public:
 		static Stock create(const std::string &symbol);
 		Stock();
-		~Stock();
 
 		std::string &getSymbol();
 
@@ -20,6 +20,11 @@ class Stock{
 
 		std::vector<Offer> &getAsks();
 		std::vector<Offer> &getBids();
+
+		void lockAsksQueueMutex();
+		void unlockAsksQueueMutex();
+		void lockBidsQueueMutex();
+		void unlockBidsQueueMutex();
 
 	private:
 		void setSymbol(const std::string &symbol);

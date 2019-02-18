@@ -1,18 +1,23 @@
 #include "account.h"
 
-Account::Account(unsigned int accountId)
+unsigned int Account::accountCounter = 0;
+
+Account::Account()
 {
-	this->accountId_ = accountId;
+	this->accountId_ = ++accountCounter;
 }
 
 void Account::credit(float amount)
 {
-
+	this->balance_ += amount;
 }
 
 void Account::debit(float amount)
 {
-
+	if(this->balance_ < amount){
+		throw std::runtime_error("Error: Insufficient funds");
+	}
+	this->balance_ -= amount;
 }
 
 float Account::getBalance()

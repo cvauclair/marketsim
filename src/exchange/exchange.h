@@ -13,10 +13,13 @@ class Exchange{
 		Exchange();
 		~Exchange();
 
+		Account &createAccount();
+
 		Stock &getStock(const std::string &symbol);
 
 	private:
 		std::unordered_map<std::string, Stock> stocks_;
+		std::unordered_map<unsigned int, Account> accounts_;
 		std::vector<Arbitrator> arbitrators_;
 };
 

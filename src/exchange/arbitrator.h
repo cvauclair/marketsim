@@ -13,7 +13,7 @@
 // of matching buyers and sellers.
 class Arbitrator{
 	public:
-		Arbitrator(Stock *stock);
+		Arbitrator(Stock *stock, Account *exchangeAccount);
 		~Arbitrator();
 
 		void start();
@@ -24,9 +24,11 @@ class Arbitrator{
 	protected:
 		void run();
 		void trade(Offer *bid, Offer *ask);
+		void arbitrate(Offer *bid, Offer *ask);
 
 	private:
 		Stock *stock_ = nullptr;
+		Account *exchangeAccount_ = nullptr;
 
 		std::thread *t = nullptr;
 		bool stop_ = false;

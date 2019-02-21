@@ -1,8 +1,9 @@
 #include "arbitrator.h"
 
-Arbitrator::Arbitrator(Stock *stock)
+Arbitrator::Arbitrator(Stock *stock, Account *exchangeAccount)
 {
 	this->stock_ = stock;
+	this->exchangeAccount_ = exchangeAccount;
 }
 
 Arbitrator::~Arbitrator()
@@ -45,8 +46,12 @@ void Arbitrator::resolveOffers()
 	std::sort(bids.begin(), bids.end(), [](Offer &offer1, Offer &offer2){return offer1.price < offer2.price;});
 
 	// Order matching
-	while(sameRate(bids.back().price, asks.back().price)){
-		this->trade(&bids.back(), &asks.back());
+	while(bids.back().price >= asks.back().price){
+		if(sameRate(bids.back().price, asks.back().price)){
+			this->trade(&bids.back(), &asks.back());
+		}else{
+			this->arbitrate(&bids.back(), &asks.back());
+		}
 
 		// Pop back if fulfilled
 		if(bids.back().quantity <= 0){
@@ -100,4 +105,41 @@ void Arbitrator::trade(Offer *bid, Offer *ask)
 	this->stock_->lastTradePrice_ = bid->price;
 
 	Logger::log("info", this->stock_->getSymbol() + " " + std::to_string(quantityTraded) + " quantity traded", true);
+}
+
+void Arbitrator::arbitrate(Offer *bid, Offer *ask)
+{
+	// Check if rates are the same
+	if(bid->price < ask->price){
+		throw std::runtime_error("Error: Rate mismatch");
+	}
+
+	// Get quantity that will be traded
+	unsigned int quantityTraded = std::min(bid->quantity, ask->quantity);
+
+	// Exchange buys at ask price
+	// Adjust buyer account
+	bid->account->addShares(this->stock_->getSymbol(), quantityTraded);
+	bid->account->debit(quantityTraded * bid->price);
+
+	// Adjust seller account
+	ask->account->removeShares(this->stock_->getSymbol(), quantityTraded);
+	ask->account->credit(quantityTraded * ask->price);
+
+	// Adjust exchange account
+	float arbitrationProfit = quantityTraded * (bid->price - ask->price);
+	this->exchangeAccount_->credit(arbitrationProfit);
+
+	// Adjust offers
+	bid->quantity -= quantityTraded;
+	ask->quantity -= quantityTraded;
+
+	// Update volume
+	this->stock_->volume_ += quantityTraded;
+
+	// Update last trade price
+	this->stock_->lastTradePrice_ = bid->price;
+
+	Logger::log("info", this->stock_->getSymbol() + " " + std::to_string(quantityTraded) + " quantity traded", true);
+	Logger::log("info", "Arbitration profit: " + std::to_string(arbitrationProfit), true);
 }

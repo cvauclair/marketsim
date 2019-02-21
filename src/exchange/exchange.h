@@ -37,6 +37,9 @@ class Exchange{
 		std::unordered_map<std::string, Stock> stocks_;
 		std::unordered_map<unsigned int, Account> accounts_;
 		std::vector<Arbitrator> arbitrators_;
+		std::vector<Offer> offers_;
+
+		Account *exchangeAccount_ = nullptr;
 };
 
 #endif

@@ -25,7 +25,7 @@ void Simulation::run()
 			try {
 				agent.doAction();
 			} catch (std::exception &e) {
-				Logger::log("error", e.what(), true);
+				Logger::log("error", e.what());
 			}
 		}
 	}

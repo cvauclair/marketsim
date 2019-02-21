@@ -32,6 +32,11 @@ void AccountController::buyShares(unsigned int accountId, const std::string &sym
 {
 	this->validateAccountId(accountId);
 
+	// Check if enough funds
+	if(this->getTotalBidsValue(accountId, symbol) + quantity * price > this->exchange_->accounts_[accountId].getBalance()){
+		throw std::runtime_error("Error: Insufficient funds");
+	}
+
 	Offer &newOffer = this->offerController_.createBid(accountId, symbol, quantity, price);
 	this->exchange_->accounts_[accountId].addOffer(&newOffer);
 }
@@ -40,17 +45,38 @@ void AccountController::sellShares(unsigned int accountId, const std::string &sy
 {
 	this->validateAccountId(accountId);
 
+	// Check if enough shares
+	if(this->getTotalAsksSize(accountId, symbol) + quantity > this->exchange_->accounts_[accountId].getShares(symbol)){
+		throw std::runtime_error("Error: Insufficient shares " + symbol);
+	}
+
 	Offer &newOffer = this->offerController_.createAsk(accountId, symbol, quantity, price);
 	this->exchange_->accounts_[accountId].addOffer(&newOffer);
 }
 
-std::vector<Offer *> &AccountController::getOffers(unsigned int accountId, const std::string &symbol)
+float AccountController::getTotalBidsValue(unsigned int accountId, const std::string &symbol)
 {
-	this->validateAccountId(accountId);
+	this->validAccounId(accountId);
 	this->stockController_.validateStockSymbol(symbol);
 
-	return this->exchange_->accounts_[accountId].getOffers();
+	return this->exchange_->accounts_[accountId].getTotalBidsValue(symbol);
 }
+
+unsigned int AccountController::getTotalAsksSize(unsigned int accountId, const std::string &symbol)
+{
+	this->validAccounId(accountId);
+	this->stockController_.validateStockSymbol(symbol);
+
+	return this->exchange_->accounts_[accountId].getTotalAsksSize(symbol);
+}
+
+//std::vector<Offer *> &AccountController::getOffers(unsigned int accountId, const std::string &symbol)
+//{
+//	this->validateAccountId(accountId);
+//	this->stockController_.validateStockSymbol(symbol);
+
+//	return this->exchange_->accounts_[accountId].getOffers();
+//}
 
 void AccountController::cancelOffer(unsigned int offerId)
 {

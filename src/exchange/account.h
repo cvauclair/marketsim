@@ -29,7 +29,8 @@ class Account{
 
 		// Offers methods
 		void addOffer(Offer *offer);
-		std::vector<Offer *> &getOffers();
+		float getTotalBidsValue(const std::string &symbol);
+		unsigned int getTotalAsksSize(const std::string &symbol);
 
 	private:
 		static unsigned int accountCounter;
@@ -37,7 +38,7 @@ class Account{
 		// Account details
 		std::unordered_map<std::string, unsigned int> portfolio_;
 
-		std::vector<Offer *> offers_;
+		std::unordered_map<unsigned int, Offer *> offers_;
 
 		float balance_ = 1000.0f;
 

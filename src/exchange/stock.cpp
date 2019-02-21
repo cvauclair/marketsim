@@ -25,7 +25,7 @@ std::string &Stock::getSymbol()
 void Stock::addAsk(unsigned int quantity, float price, Account *account)
 {
 	this->lockAsksQueueMutex();
-	this->asksQueue_.emplace_back(quantity, price, account);
+	this->asksQueue_.emplace_back(Offer::ASK, quantity, price, account);
 	this->unlockAsksQueueMutex();
 
 	Logger::log("info", "Offer " + std::to_string(Offer::offerCounter) + ": Sell " + std::to_string(quantity) + " " + this->getSymbol() + " @ " + std::to_string(price), true);
@@ -43,7 +43,7 @@ void Stock::addAsk(Offer &offer)
 void Stock::addBid(unsigned int quantity, float price, Account *account)
 {
 	this->lockBidsQueueMutex();
-	this->bidsQueue_.emplace_back(quantity, price, account);
+	this->bidsQueue_.emplace_back(Offer::BID, quantity, price, account);
 	this->unlockBidsQueueMutex();
 
 	Logger::log("info", "Offer " + std::to_string(Offer::offerCounter) + ": Buy " + std::to_string(quantity) + " " + this->getSymbol() + " @ " + std::to_string(price), true);

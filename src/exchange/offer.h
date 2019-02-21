@@ -10,14 +10,21 @@
 class Account;
 class Offer{
 	public:
-		enum Status{PENDING, PROCESSING, FULFILLED, CANCELLED};
+		enum OfferStatus{PENDING, PROCESSING, FULFILLED, CANCELLED};
+		enum OfferType{ASK, BID};
 
-		Offer(unsigned int quantity, float price, Account *account);
+		Offer(OfferType type, unsigned int quantity, float price, Account *account);
+
 		unsigned int quantity = 0;
+
 		float price = 0.0;
+
 		unsigned int offerId = 0;
+
 		Account *account = nullptr;
-		Status status_;
+
+		OfferStatus status_;
+		OfferType type_;
 
 	static unsigned int offerCounter;
 };

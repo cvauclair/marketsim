@@ -22,17 +22,12 @@ Agent::~Agent()
 
 void Agent::doAction()
 {
-	// Place order 0.10 percent of times
 	if(Agent::percent(gen) < 0.0001){
 		// Decide buy/sell
 		if(Agent::binary(gen) == 1){
-			if(this->aController_.getOffers(this->accountId_, "AAPL").size() < 2){
-				this->aController_.buyShares(this->accountId_, "AAPL", Agent::quantity(gen), Agent::price(gen));
-			}
+			this->aController_.buyShares(this->accountId_, "AAPL", Agent::quantity(gen), Agent::price(gen));
 		}else {
-			if(this->aController_.getOffers(this->accountId_, "AAPL").size() < 2){
-				this->aController_.sellShares(this->accountId_, "AAPL", Agent::quantity(gen), Agent::price(gen));
-			}
+			this->aController_.sellShares(this->accountId_, "AAPL", Agent::quantity(gen), Agent::price(gen));
 		}
 	}
 }

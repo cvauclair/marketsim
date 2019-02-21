@@ -11,7 +11,7 @@ Offer &OfferController::createAsk(unsigned int accountId, const std::string &sym
 	this->sController_.validateStockSymbol(symbol);
 
 	// Create new offer
-	Offer newOffer(quantity, price, &(this->exchange_->accounts_[accountId]));
+	Offer newOffer(Offer::ASK, quantity, price, &(this->exchange_->accounts_[accountId]));
 	this->exchange_->stocks_[symbol].addAsk(newOffer);
 
 	// Return newly created offer
@@ -24,7 +24,7 @@ Offer &OfferController::createBid(unsigned int accountId, const std::string &sym
 	this->sController_.validateStockSymbol(symbol);
 
 	// Create new offer
-	Offer newOffer(quantity, price, &(this->exchange_->accounts_[accountId]));
+	Offer newOffer(Offer::BID, quantity, price, &(this->exchange_->accounts_[accountId]));
 	this->exchange_->stocks_[symbol].addBid(newOffer);
 
 	// Return newly created offer

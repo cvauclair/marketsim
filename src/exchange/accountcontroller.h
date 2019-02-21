@@ -22,7 +22,9 @@ class AccountController{
 		void sellShares(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price = CURRENT);
 
 		// Offer actions
-		std::vector<Offer *> &getOffers(unsigned int accountId, const std::string &symbol);
+		float getTotalBidsValue(unsigned int accountId, const std::string &symbol);
+		unsigned int getTotalAsksSize(unsigned int accountId, const std::string &symbol);
+//		std::vector<Offer *> &getOffers(unsigned int accountId, const std::string &symbol);
 		void cancelOffer(unsigned int offerId);
 
 		// This methods will throw an exception if the account id is invalid

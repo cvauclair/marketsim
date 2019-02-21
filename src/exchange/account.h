@@ -15,25 +15,32 @@ class Account{
 
 		unsigned int getId();
 
-		// Balance actions
+		// Balance methods
 		void credit(float amount);
 		void debit(float amount);
 		float getBalance();
 
-		// Portfolio actions
+		// Portfolio methods
 		void addShares(const std::string &symbol, unsigned int quantity);
 		void removeShares(const std::string &symbol, unsigned int quantity);
 
 		unsigned int getShares(const std::string &symbol);
 		std::unordered_map<std::string, unsigned int> &getPortfolio();
 
+		// Offers methods
+		void addOffer(Offer *offer);
+		std::vector<Offer *> &getOffers();
+
 	private:
 		static unsigned int accountCounter;
 
 		// Account details
 		std::unordered_map<std::string, unsigned int> portfolio_;
+
 		std::vector<Offer *> offers_;
+
 		float balance_ = 1000.0f;
+
 		unsigned int accountId_ = 0;
 };
 

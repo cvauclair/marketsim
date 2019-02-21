@@ -25,6 +25,7 @@ set(exchangeSRCS
 	"src/exchange/exchange.cpp"
 	"src/exchange/logger.cpp"
 	"src/exchange/offer.cpp"
+	"src/exchange/offercontroller.cpp"
 	"src/exchange/stock.cpp"
 	"src/exchange/stockcontroller.cpp"
 #	"src/exchange/tradeinterface.cpp"

@@ -55,3 +55,13 @@ std::unordered_map<std::string, unsigned int> &Account::getPortfolio()
 {
 	return this->portfolio_;
 }
+
+void Account::addOffer(Offer *offer)
+{
+	this->offers_.push_back(offer);
+}
+
+std::vector<Offer *> &Account::getOffers()
+{
+	return this->offers_;
+}

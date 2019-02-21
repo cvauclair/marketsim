@@ -29,7 +29,7 @@ class Account{
 		static unsigned int accountCounter;
 
 		std::unordered_map<std::string, unsigned int> portfolio_;
-		float balance_ = 0.0f;
+		float balance_ = 1000.0f;
 		unsigned int accountId_ = 0;
 };
 

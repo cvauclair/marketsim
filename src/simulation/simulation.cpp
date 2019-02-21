@@ -2,6 +2,7 @@
 
 Simulation::Simulation(Exchange &exchange, unsigned int numAgents)
 {
+	// Create agents
 	for(unsigned int i = 0; i < numAgents; i++){
 		this->agents_.emplace_back(exchange);
 	}

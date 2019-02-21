@@ -22,7 +22,6 @@ class Agent{
 		static std::uniform_int_distribution<> price;
 
 		TradeInterface tradeInterface_;
-		Exchange *exchange_ = nullptr;
 };
 
 #endif

@@ -5,11 +5,12 @@ std::mt19937 Agent::gen(Agent::rd());
 std::uniform_int_distribution<> Agent::binary(0, 1);
 std::uniform_real_distribution<> Agent::percent(0.0, 1.0);
 std::uniform_int_distribution<> Agent::quantity(1, 50);
-std::uniform_int_distribution<> Agent::price(95, 105);
+std::uniform_int_distribution<> Agent::price(10, 30);
 
 Agent::Agent(Exchange &exchange) : tradeInterface_(exchange, exchange.createAccount())
 {
-	this->exchange_ = &exchange;
+	// Give all accounts 100 AAPL shares
+	exchange.addShares(this->tradeInterface_.getAccount().getId(), "AAPL", 100);
 }
 
 Agent::~Agent()
@@ -20,7 +21,7 @@ Agent::~Agent()
 void Agent::doAction()
 {
 	// Place order 0.10 percent of times
-	if(Agent::percent(gen) < 0.1){
+	if(Agent::percent(gen) < 0.0001){
 		// Decide buy/sell
 		if(Agent::binary(gen) == 1){
 			this->tradeInterface_.buy("AAPL", Agent::quantity(gen), Agent::price(gen));

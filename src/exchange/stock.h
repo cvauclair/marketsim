@@ -8,10 +8,17 @@
 #include "offer.h"
 #include "logger.h"
 
+class Arbitrator;
 class Stock{
+	friend class Arbitrator;
 	public:
-		static Stock create(const std::string &symbol);
+	    static Stock create(const std::string &symbol);
 		Stock();
+
+		void lockAsksQueueMutex();
+		void unlockAsksQueueMutex();
+		void lockBidsQueueMutex();
+		void unlockBidsQueueMutex();
 
 		std::string &getSymbol();
 
@@ -21,19 +28,20 @@ class Stock{
 		std::vector<Offer> &getAsks();
 		std::vector<Offer> &getBids();
 
-		void lockAsksQueueMutex();
-		void unlockAsksQueueMutex();
-		void lockBidsQueueMutex();
-		void unlockBidsQueueMutex();
+		float getLastTradePrice();
+		float getLowestAskPrice();
+		float getHighestBidPrice();
 
 	private:
-		void setSymbol(const std::string &symbol);
-
 		// Mutexes
 		static std::unordered_map<Stock *, std::mutex> asksQueueMutexes;
 		static std::unordered_map<Stock *, std::mutex> bidsQueueMutexes;
 
 		std::string symbol_ = "";
+
+		float lastTradePrice_ = 0.0f;
+		float lowestAskPrice_ = 0.0f;
+		float highestBidPrice_ = 0.0f;
 
 		std::vector<Offer> asks_ = {};
 		std::vector<Offer> bids_ = {};

@@ -60,6 +60,15 @@ void Arbitrator::resolveOffers()
 			break;
 		}
 	}
+
+	// Set highest bid/lowest ask after matching has been executed
+	// (if there are any asks/bids)
+	if(asks.size() != 0){
+		this->stock_->lowestAskPrice_ = asks.back().price;
+	}
+	if(bids.size() != 0){
+		this->stock_->highestBidPrice_ = bids.back().price;
+	}
 }
 
 void Arbitrator::trade(Offer *bid, Offer *ask)
@@ -83,6 +92,9 @@ void Arbitrator::trade(Offer *bid, Offer *ask)
 	// Adjust offers
 	bid->quantity -= quantityTraded;
 	ask->quantity -= quantityTraded;
+
+	// Update last trade price
+	this->stock_->lastTradePrice_ = bid->price;
 
 	Logger::log("info", this->stock_->getSymbol() + " " + std::to_string(quantityTraded) + " quantity traded", true);
 }

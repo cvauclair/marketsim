@@ -6,6 +6,12 @@ TradeInterface::TradeInterface(Exchange &exchange, Account &account)
 	this->account_ = &account;
 }
 
+TradeInterface TradeInterface::create(Exchange &exchange, Account &account)
+{
+	TradeInterface newTradeInterface(exchange, account);
+	return newTradeInterface;
+}
+
 void TradeInterface::buy(const std::string &symbol, unsigned int quantity, float price)
 {
 	// Check if account has enough funds

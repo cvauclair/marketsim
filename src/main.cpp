@@ -8,6 +8,8 @@
 
 #include "exchange/tradeinterface.h"
 
+#include "simulation/simulation.h"
+
 using namespace std;
 
 void simulation(Exchange &exchange);
@@ -15,9 +17,12 @@ void simulation(Exchange &exchange);
 int main(int argc, char **argv)
 {
 	Exchange exchange;
+	Simulation sim(exchange, 50);
+	exchange.start();
 	std::this_thread::sleep_for(chrono::seconds(2));
-	simulation(exchange);
-	std::this_thread::sleep_for(chrono::seconds(2));
+	sim.start();
+	std::this_thread::sleep_for(chrono::seconds(10));
+	sim.stop();
 
 //	cout << "Max number of threads: " << std::to_string(thread::hardware_concurrency()) << endl;
 

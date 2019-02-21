@@ -13,7 +13,7 @@ Stock::Stock()
 Stock Stock::create(const std::string &symbol)
 {
 	Stock newStock;
-	newStock.setSymbol(symbol);
+	newStock.symbol_ = symbol;
 	return newStock;
 }
 
@@ -66,6 +66,21 @@ std::vector<Offer> &Stock::getBids()
 	return this->bids_;
 }
 
+float Stock::getLastTradePrice()
+{
+	return this->lastTradePrice_;
+}
+
+float Stock::getLowestAskPrice()
+{
+	return this->lowestAskPrice_;
+}
+
+float Stock::getHighestBidPrice()
+{
+	return this->highestBidPrice_;
+}
+
 void Stock::lockAsksQueueMutex()
 {
 	while(!Stock::asksQueueMutexes[this].try_lock()){}
@@ -84,9 +99,4 @@ void Stock::lockBidsQueueMutex()
 void Stock::unlockBidsQueueMutex()
 {
 	Stock::bidsQueueMutexes[this].unlock();
-}
-
-void Stock::setSymbol(const std::string &symbol)
-{
-	this->symbol_ = symbol;
 }

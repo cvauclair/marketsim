@@ -12,11 +12,6 @@ Exchange::Exchange()
 
 		Logger::log("debug", "Stock " + symbol + " added", true);
 	}
-
-	// Start arbitrators
-	for(Arbitrator &arbitrator : this->arbitrators_){
-		arbitrator.start();
-	}
 }
 
 Exchange::~Exchange()
@@ -24,6 +19,14 @@ Exchange::~Exchange()
 	// Stop arbitrators
 	for(Arbitrator &arbitrator : this->arbitrators_){
 		arbitrator.stop();
+	}
+}
+
+void Exchange::start()
+{
+	// Start arbitrators
+	for(Arbitrator &arbitrator : this->arbitrators_){
+		arbitrator.start();
 	}
 }
 
@@ -96,11 +99,37 @@ bool Exchange::validAccounId(unsigned int accountId)
 
 Stock &Exchange::getStock(const std::string &symbol)
 {
-	if(this->stocks_.find(symbol) != this->stocks_.end()){
-		return this->stocks_[symbol];
-	}else{
+	if(!this->validStockSymbol(symbol)){
 		throw std::runtime_error("Error: Invalid stock symbol " + symbol);
 	}
+	return this->stocks_[symbol];
+}
+
+float Exchange::getLastTradePrice(const std::string &symbol)
+{
+	if(!this->validStockSymbol(symbol)){
+		throw std::runtime_error("Error: Invalid stock symbol " + symbol);
+	}
+
+	return this->stocks_[symbol].getLastTradePrice();
+}
+
+float Exchange::getHighestBid(const std::string &symbol)
+{
+	if(!this->validStockSymbol(symbol)){
+		throw std::runtime_error("Error: Invalid stock symbol " + symbol);
+	}
+
+	return this->stocks_[symbol].getHighestBidPrice();
+}
+
+float Exchange::getLowestAsk(const std::string &symbol)
+{
+	if(!this->validStockSymbol(symbol)){
+		throw std::runtime_error("Error: Invalid stock symbol " + symbol);
+	}
+
+	return this->stocks_[symbol].getLowestAskPrice();
 }
 
 bool Exchange::validStockSymbol(const std::string &symbol)

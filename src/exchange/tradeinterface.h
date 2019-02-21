@@ -8,6 +8,8 @@ class TradeInterface{
 	public:
 		TradeInterface(Exchange &exchange, Account &account);
 
+		static TradeInterface create(Exchange &exchange, Account &account);
+
 		// Market actions
 		void buy(const std::string &symbol, unsigned int quantity, float price);
 		void sell(const std::string &symbol, unsigned int quantity, float price);

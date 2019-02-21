@@ -21,7 +21,11 @@ void Simulation::run()
 {
 	while(!this->stop_){
 		for(Agent &agent: this->agents_){
-			agent.doAction();
+			try {
+				agent.doAction();
+			} catch (std::exception &e) {
+				Logger::log("error", e.what(), true);
+			}
 		}
 	}
 }

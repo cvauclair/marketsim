@@ -5,6 +5,7 @@
 #include <thread>
 
 #include "exchange/exchange.h"
+#include "exchange/logger.h"
 
 #include "agent.h"
 

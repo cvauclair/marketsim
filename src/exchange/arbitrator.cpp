@@ -93,6 +93,9 @@ void Arbitrator::trade(Offer *bid, Offer *ask)
 	bid->quantity -= quantityTraded;
 	ask->quantity -= quantityTraded;
 
+	// Update volume
+	this->stock_->volume_ += quantityTraded;
+
 	// Update last trade price
 	this->stock_->lastTradePrice_ = bid->price;
 

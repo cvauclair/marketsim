@@ -31,6 +31,7 @@ class Stock{
 		float getLastTradePrice();
 		float getLowestAskPrice();
 		float getHighestBidPrice();
+		unsigned int getVolume();
 
 	private:
 		// Mutexes
@@ -42,6 +43,8 @@ class Stock{
 		float lastTradePrice_ = 0.0f;
 		float lowestAskPrice_ = 0.0f;
 		float highestBidPrice_ = 0.0f;
+
+		unsigned int volume_ = 0;
 
 		std::vector<Offer> asks_ = {};
 		std::vector<Offer> bids_ = {};

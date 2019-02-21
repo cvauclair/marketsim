@@ -132,6 +132,15 @@ float Exchange::getLowestAsk(const std::string &symbol)
 	return this->stocks_[symbol].getLowestAskPrice();
 }
 
+unsigned int Exchange::getVolume(const std::string &symbol)
+{
+	if(!this->validStockSymbol(symbol)){
+		throw std::runtime_error("Error: Invalid stock symbol " + symbol);
+	}
+
+	return this->stocks_[symbol].getVolume();
+}
+
 bool Exchange::validStockSymbol(const std::string &symbol)
 {
 	if(this->stocks_.find(symbol) != this->stocks_.end()){

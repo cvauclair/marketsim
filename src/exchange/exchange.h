@@ -30,6 +30,7 @@ class Exchange{
 		float getLastTradePrice(const std::string &symbol);
 		float getHighestBid(const std::string &symbol);
 		float getLowestAsk(const std::string &symbol);
+		unsigned int getVolume(const std::string &symbol);
 		bool validStockSymbol(const std::string &symbol);
 
 	private:

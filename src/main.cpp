@@ -24,6 +24,9 @@ int main(int argc, char **argv)
 	std::this_thread::sleep_for(chrono::seconds(10));
 	sim.stop();
 
+	Logger::log("info", "AAPL price: " + std::to_string(exchange.getLastTradePrice("AAPL")) + " Volume: " +
+				std::to_string(exchange.getVolume("AAPL")), true);
+
 //	cout << "Max number of threads: " << std::to_string(thread::hardware_concurrency()) << endl;
 
 //	QApplication app(argc, argv);

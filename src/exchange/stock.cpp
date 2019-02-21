@@ -81,6 +81,11 @@ float Stock::getHighestBidPrice()
 	return this->highestBidPrice_;
 }
 
+unsigned int Stock::getVolume()
+{
+	return this->volume_;
+}
+
 void Stock::lockAsksQueueMutex()
 {
 	while(!Stock::asksQueueMutexes[this].try_lock()){}

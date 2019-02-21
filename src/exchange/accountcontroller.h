@@ -4,6 +4,7 @@
 #include "account.h"
 #include "exchange.h"
 
+#include "offercontroller.h"
 #include "stockcontroller.h"
 
 class AccountController{
@@ -33,6 +34,7 @@ class AccountController{
 		bool validAccounId(unsigned int accountId);
 
 	private:
+		OfferController offerController_;
 		StockController stockController_;
 		Exchange *exchange_ = nullptr;
 };

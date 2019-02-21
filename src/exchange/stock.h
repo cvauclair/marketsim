@@ -24,7 +24,10 @@ class Stock{
 		std::string &getSymbol();
 
 		void addAsk(unsigned int quantity, float price, Account *account);
+		void addAsk(Offer &offer);
+
 		void addBid(unsigned int quantity, float price, Account *account);
+		void addBid(Offer &offer);
 
 		std::vector<Offer> &getAsks();
 		std::vector<Offer> &getBids();

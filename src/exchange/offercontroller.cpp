@@ -5,6 +5,32 @@ OfferController::OfferController(Exchange &exchange): sController_(exchange)
 	this->exchange_ = &exchange;
 }
 
+Offer &OfferController::createAsk(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price)
+{
+	// Validate arguments
+	this->sController_.validateStockSymbol(symbol);
+
+	// Create new offer
+	Offer newOffer(quantity, price, &(this->exchange_->accounts_[accountId]));
+	this->exchange_->stocks_[symbol].addAsk(newOffer);
+
+	// Return newly created offer
+	return this->exchange_->stocks_[symbol].getAsks().back();
+}
+
+Offer &OfferController::createBid(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price)
+{
+	// Validate arguments
+	this->sController_.validateStockSymbol(symbol);
+
+	// Create new offer
+	Offer newOffer(quantity, price, &(this->exchange_->accounts_[accountId]));
+	this->exchange_->stocks_[symbol].addBid(newOffer);
+
+	// Return newly created offer
+	return this->exchange_->stocks_[symbol].getBids().back();
+}
+
 std::vector<Offer *> OfferController::getAccountOffers(unsigned int accountId, const std::string &symbol)
 {
 	std::vector<Offer *> offers;

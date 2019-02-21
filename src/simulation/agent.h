@@ -13,6 +13,9 @@ class Agent{
 
 		void doAction();
 
+		float getTotalOfferMoneySize(const std::string &symbol);
+		unsigned int getTotalOfferShareSize(const std::string &symbol);
+
 	private:
 		// Random number generators
 		static std::random_device rd;	//Will be used to obtain a seed for the random number engine

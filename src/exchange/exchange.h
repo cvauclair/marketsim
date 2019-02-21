@@ -22,11 +22,17 @@ class Exchange{
 		void start();
 
 	private:
-		std::unordered_map<std::string, Stock> stocks_;
+		// Accounts
 		std::unordered_map<unsigned int, Account> accounts_;
-		std::vector<Arbitrator> arbitrators_;
-		std::vector<Offer> offers_;
 
+		// Stocks
+		std::unordered_map<std::string, Stock> stocks_;
+		std::vector<Arbitrator> arbitrators_;
+
+		// Offers
+		unsigned int offerCounter_ = 0;
+
+		// House account
 		Account *exchangeAccount_ = nullptr;
 };
 

@@ -1,6 +1,6 @@
 #include "accountcontroller.h"
 
-AccountController::AccountController(Exchange &exchange): stockController_(exchange)
+AccountController::AccountController(Exchange &exchange): offerController_(exchange), stockController_(exchange)
 {
 	this->exchange_ = &exchange;
 }
@@ -31,17 +31,17 @@ void AccountController::removeShares(unsigned int accountId, const std::string &
 void AccountController::buyShares(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price)
 {
 	this->validateAccountId(accountId);
-	this->stockController_.validateStockSymbol(symbol);
 
-	this->exchange_->stocks_[symbol].addBid(quantity, price, &(this->exchange_->accounts_[accountId]));
+	Offer &newOffer = this->offerController_.createBid(accountId, symbol, quantity, price);
+	this->exchange_->accounts_[accountId].addOffer(&newOffer);
 }
 
 void AccountController::sellShares(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price)
 {
 	this->validateAccountId(accountId);
-	this->stockController_.validateStockSymbol(symbol);
 
-	this->exchange_->stocks_[symbol].addAsk(quantity, price, &(this->exchange_->accounts_[accountId]));
+	Offer &newOffer = this->offerController_.createAsk(accountId, symbol, quantity, price);
+	this->exchange_->accounts_[accountId].addOffer(&newOffer);
 }
 
 std::vector<Offer *> &AccountController::getOffers(unsigned int accountId, const std::string &symbol)

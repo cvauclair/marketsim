@@ -31,6 +31,15 @@ void Stock::addAsk(unsigned int quantity, float price, Account *account)
 	Logger::log("info", "Offer " + std::to_string(Offer::offerCounter) + ": Sell " + std::to_string(quantity) + " " + this->getSymbol() + " @ " + std::to_string(price), true);
 }
 
+void Stock::addAsk(Offer &offer)
+{
+	this->lockBidsQueueMutex();
+	this->asksQueue_.push_back(offer);
+	this->unlockBidsQueueMutex();
+
+	Logger::log("info", "Offer " + std::to_string(offer.offerId) + ": Sell " + std::to_string(offer.quantity) + " " + this->getSymbol() + " @ " + std::to_string(offer.price), true);
+}
+
 void Stock::addBid(unsigned int quantity, float price, Account *account)
 {
 	this->lockBidsQueueMutex();
@@ -38,6 +47,15 @@ void Stock::addBid(unsigned int quantity, float price, Account *account)
 	this->unlockBidsQueueMutex();
 
 	Logger::log("info", "Offer " + std::to_string(Offer::offerCounter) + ": Buy " + std::to_string(quantity) + " " + this->getSymbol() + " @ " + std::to_string(price), true);
+}
+
+void Stock::addBid(Offer &offer)
+{
+	this->lockBidsQueueMutex();
+	this->bidsQueue_.push_back(offer);
+	this->unlockBidsQueueMutex();
+
+	Logger::log("info", "Offer " + std::to_string(offer.offerId) + ": Buy " + std::to_string(offer.quantity) + " " + this->getSymbol() + " @ " + std::to_string(offer.price), true);
 }
 
 std::vector<Offer> &Stock::getAsks()

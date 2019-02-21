@@ -5,6 +5,9 @@
 #include <thread>
 
 #include "exchange/exchange.h"
+#include "exchange/accountcontroller.h"
+#include "exchange/stockcontroller.h"
+
 #include "exchange/logger.h"
 
 #include "agent.h"
@@ -19,6 +22,9 @@ class Simulation{
 		void stop();
 
 	private:
+		AccountController aController_;
+		StockController sController_;
+
 		std::vector<Agent> agents_ = {};
 
 		std::thread *t = nullptr;

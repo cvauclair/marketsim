@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <thread>
 
+#include "account.h"
 #include "stock.h"
 
 #include "logger.h"

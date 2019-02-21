@@ -3,7 +3,8 @@
 
 #include <random>
 
-#include "exchange/tradeinterface.h"
+#include "exchange/accountcontroller.h"
+#include "exchange/stockcontroller.h"
 
 class Agent{
 	public:
@@ -21,7 +22,10 @@ class Agent{
 		static std::uniform_int_distribution<> quantity;
 		static std::uniform_int_distribution<> price;
 
-		TradeInterface tradeInterface_;
+		// Agent members
+		AccountController aController_;
+		StockController sController_;
+		unsigned int accountId_ = 0;
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include <mutex>
+#include <list>
 
 #include "offer.h"
 #include "logger.h"

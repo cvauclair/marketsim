@@ -1,6 +1,6 @@
 #include "simulation.h"
 
-Simulation::Simulation(Exchange &exchange, unsigned int numAgents)
+Simulation::Simulation(Exchange &exchange, unsigned int numAgents): aController_(exchange), sController_(exchange)
 {
 	// Create agents
 	for(unsigned int i = 0; i < numAgents; i++){

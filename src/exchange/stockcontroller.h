@@ -15,6 +15,12 @@ class StockController{
 
 		unsigned int getVolume(const std::string &symbol);
 
+		// This methods will throw an exception if the stock symbol is invalid
+		// and will do nothing otherwise
+		void validateStockSymbol(const std::string &symbol);
+
+		// This method returns true if the stock symbol is valid and false if it is invalid.
+		// A valid stock symbol means that it is in the hashtable of the exchange.
 		bool validStockSymbol(const std::string &symbol);
 
 	private:

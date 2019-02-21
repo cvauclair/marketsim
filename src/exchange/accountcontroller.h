@@ -24,7 +24,12 @@ class AccountController{
 		std::vector<Offer *> &getOffers(unsigned int accountId, const std::string &symbol);
 		void cancelOffer(unsigned int offerId);
 
-		// Useful methods
+		// This methods will throw an exception if the account id is invalid
+		// and will do nothing otherwise
+		void validateAccountId(unsigned int accountId);
+
+		// This method returns true if the account id is valid and false if it is invalid.
+		// A valid account id means that it is in the hashtable of the exchange.
 		bool validAccounId(unsigned int accountId);
 
 	private:

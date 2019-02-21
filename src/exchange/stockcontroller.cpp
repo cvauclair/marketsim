@@ -7,46 +7,44 @@ StockController::StockController(Exchange &exchange)
 
 Stock &StockController::getStock(const std::string &symbol)
 {
-	if(!this->validStockSymbol(symbol)){
-		throw std::runtime_error("Error: Invalid stock symbol " + symbol);
-	}
+	this->validateStockSymbol(symbol);
+
 	return this->exchange_->stocks_[symbol];
 }
 
 float StockController::getLastTradePrice(const std::string &symbol)
 {
-	if(!this->validStockSymbol(symbol)){
-		throw std::runtime_error("Error: Invalid stock symbol " + symbol);
-	}
+	this->validateStockSymbol(symbol);
 
 	return this->exchange_->stocks_[symbol].getLastTradePrice();
 }
 
 float StockController::getHighestBid(const std::string &symbol)
 {
-	if(!this->validStockSymbol(symbol)){
-		throw std::runtime_error("Error: Invalid stock symbol " + symbol);
-	}
+	this->validateStockSymbol(symbol);
 
 	return this->exchange_->stocks_[symbol].getHighestBidPrice();
 }
 
 float StockController::getLowestAsk(const std::string &symbol)
 {
-	if(!this->validStockSymbol(symbol)){
-		throw std::runtime_error("Error: Invalid stock symbol " + symbol);
-	}
+	this->validateStockSymbol(symbol);
 
 	return this->exchange_->stocks_[symbol].getLowestAskPrice();
 }
 
 unsigned int StockController::getVolume(const std::string &symbol)
 {
+	this->validateStockSymbol(symbol);
+
+	return this->exchange_->stocks_[symbol].getVolume();
+}
+
+void StockController::validateStockSymbol(const std::string &symbol)
+{
 	if(!this->validStockSymbol(symbol)){
 		throw std::runtime_error("Error: Invalid stock symbol " + symbol);
 	}
-
-	return this->exchange_->stocks_[symbol].getVolume();
 }
 
 bool StockController::validStockSymbol(const std::string &symbol)

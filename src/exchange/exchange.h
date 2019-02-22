@@ -28,7 +28,7 @@ class Exchange{
 
 		// Stocks
 		std::unordered_map<std::string, Stock> stocks_;
-		std::vector<Arbitrator> arbitrators_;
+		std::vector<ExchangeWorker> arbitrators_;
 
 		// Offers
 		unsigned int offerCounter_ = 0;

@@ -23,6 +23,7 @@ set(exchangeSRCS
 	"src/exchange/accountcontroller.cpp"
 	"src/exchange/arbitrator.cpp"
 	"src/exchange/exchange.cpp"
+	"src/exchange/exchangeworker.cpp"
 	"src/exchange/logger.cpp"
 	"src/exchange/marketcontroller.cpp"
 	"src/exchange/offer.cpp"

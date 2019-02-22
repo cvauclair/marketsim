@@ -32,9 +32,13 @@ class Stock{
 		std::vector<Offer> &getAsks();
 		std::vector<Offer> &getBids();
 
+		void setLastTradePrice(float lastTradePrice);
 		float getLastTradePrice();
+
 		float getLowestAskPrice();
 		float getHighestBidPrice();
+
+		void setVolume(unsigned int volume);
 		unsigned int getVolume();
 
 	private:
@@ -52,9 +56,6 @@ class Stock{
 
 		std::vector<Offer> asks_ = {};
 		std::vector<Offer> bids_ = {};
-
-		std::vector<Offer> asksQueue_ = {};
-		std::vector<Offer> bidsQueue_ = {};
 };
 
 #endif

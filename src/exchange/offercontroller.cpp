@@ -31,6 +31,11 @@ Offer &OfferController::createBid(unsigned int accountId, const std::string &sym
 	return this->exchange_->stocks_[symbol].getBids().back();
 }
 
+void OfferController::cancelOffer(unsigned int offerId)
+{
+	
+}
+
 std::vector<Offer *> OfferController::getAccountOffers(unsigned int accountId, const std::string &symbol)
 {
 	std::vector<Offer *> offers;

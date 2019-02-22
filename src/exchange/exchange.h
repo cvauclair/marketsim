@@ -12,6 +12,7 @@
 // The Exchange class acts as a controller for the whole system
 class Exchange{
 	friend class AccountController;
+	friend class MarketController;
 	friend class OfferController;
 	friend class StockController;
 	public:

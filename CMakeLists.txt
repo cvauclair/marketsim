@@ -24,6 +24,7 @@ set(exchangeSRCS
 	"src/exchange/arbitrator.cpp"
 	"src/exchange/exchange.cpp"
 	"src/exchange/logger.cpp"
+	"src/exchange/marketcontroller.cpp"
 	"src/exchange/offer.cpp"
 	"src/exchange/offercontroller.cpp"
 	"src/exchange/stock.cpp"

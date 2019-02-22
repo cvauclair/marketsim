@@ -9,10 +9,17 @@ class StockController{
 
 		Stock &getStock(const std::string &symbol);
 
+		std::vector<Offer> &getAsks(const std::string &symbol);
+		std::vector<Offer> &getBids(const std::string &symbol);
+
+		void setLastTradePrice(const std::string &symbol, float lastTradePrice);
 		float getLastTradePrice(const std::string &symbol);
+
 		float getHighestBid(const std::string &symbol);
 		float getLowestAsk(const std::string &symbol);
 
+		void setVolume(const std::string &symbol, unsigned int volume);
+		void incrementVolume(const std::string &symbol, unsigned int volume);
 		unsigned int getVolume(const std::string &symbol);
 
 		// This methods will throw an exception if the stock symbol is invalid

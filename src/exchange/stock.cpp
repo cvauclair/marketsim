@@ -25,7 +25,7 @@ std::string &Stock::getSymbol()
 void Stock::addAsk(unsigned int quantity, float price, Account *account)
 {
 	this->lockAsksQueueMutex();
-	this->asksQueue_.emplace_back(Offer::ASK, quantity, price, account);
+	this->asks_.emplace_back(Offer::ASK, quantity, price, account);
 	this->unlockAsksQueueMutex();
 
 	Logger::log("info", "Offer " + std::to_string(Offer::offerCounter) + ": Sell " + std::to_string(quantity) + " " + this->getSymbol() + " @ " + std::to_string(price), true);
@@ -34,7 +34,7 @@ void Stock::addAsk(unsigned int quantity, float price, Account *account)
 void Stock::addAsk(Offer &offer)
 {
 	this->lockBidsQueueMutex();
-	this->asksQueue_.push_back(offer);
+	this->asks_.push_back(offer);
 	this->unlockBidsQueueMutex();
 
 	Logger::log("info", "Offer " + std::to_string(offer.offerId) + ": Sell " + std::to_string(offer.quantity) + " " + this->getSymbol() + " @ " + std::to_string(offer.price), true);
@@ -43,7 +43,7 @@ void Stock::addAsk(Offer &offer)
 void Stock::addBid(unsigned int quantity, float price, Account *account)
 {
 	this->lockBidsQueueMutex();
-	this->bidsQueue_.emplace_back(Offer::BID, quantity, price, account);
+	this->bids_.emplace_back(Offer::BID, quantity, price, account);
 	this->unlockBidsQueueMutex();
 
 	Logger::log("info", "Offer " + std::to_string(Offer::offerCounter) + ": Buy " + std::to_string(quantity) + " " + this->getSymbol() + " @ " + std::to_string(price), true);
@@ -52,7 +52,7 @@ void Stock::addBid(unsigned int quantity, float price, Account *account)
 void Stock::addBid(Offer &offer)
 {
 	this->lockBidsQueueMutex();
-	this->bidsQueue_.push_back(offer);
+	this->bids_.push_back(offer);
 	this->unlockBidsQueueMutex();
 
 	Logger::log("info", "Offer " + std::to_string(offer.offerId) + ": Buy " + std::to_string(offer.quantity) + " " + this->getSymbol() + " @ " + std::to_string(offer.price), true);
@@ -60,28 +60,33 @@ void Stock::addBid(Offer &offer)
 
 std::vector<Offer> &Stock::getAsks()
 {
-	this->lockAsksQueueMutex();
+//	this->lockAsksQueueMutex();
 
-	// Transfer asks
-	this->asks_.insert(this->asks_.end(), this->asksQueue_.begin(), this->asksQueue_.end());
-	this->asksQueue_.clear();
+//	// Transfer asks
+//	this->asks_.insert(this->asks_.end(), this->asksQueue_.begin(), this->asksQueue_.end());
+//	this->asksQueue_.clear();
 
-	this->unlockAsksQueueMutex();
+//	this->unlockAsksQueueMutex();
 
 	return this->asks_;
 }
 
 std::vector<Offer> &Stock::getBids()
 {
-	this->lockBidsQueueMutex();
+//	this->lockBidsQueueMutex();
 
-	// Transfer asks
-	this->bids_.insert(this->bids_.end(), this->bidsQueue_.begin(), this->bidsQueue_.end());
-	this->bidsQueue_.clear();
+//	// Transfer asks
+//	this->bids_.insert(this->bids_.end(), this->bidsQueue_.begin(), this->bidsQueue_.end());
+//	this->bidsQueue_.clear();
 
-	this->unlockBidsQueueMutex();
+//	this->unlockBidsQueueMutex();
 
 	return this->bids_;
+}
+
+void Stock::setLastTradePrice(float lastTradePrice)
+{
+	this->lastTradePrice_ = lastTradePrice;
 }
 
 float Stock::getLastTradePrice()
@@ -97,6 +102,11 @@ float Stock::getLowestAskPrice()
 float Stock::getHighestBidPrice()
 {
 	return this->highestBidPrice_;
+}
+
+void Stock::setVolume(unsigned int volume)
+{
+	this->volume_ = volume;
 }
 
 unsigned int Stock::getVolume()

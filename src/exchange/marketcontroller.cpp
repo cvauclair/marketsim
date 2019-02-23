@@ -1,6 +1,9 @@
 #include "marketcontroller.h"
 
-MarketController::MarketController(Exchange &exchange): offerController_(exchange), stockController_(exchange)
+MarketController::MarketController(Exchange &exchange):
+	accountController_(exchange),
+	offerController_(exchange),
+	stockController_(exchange)
 {
 	this->exchange_ = &exchange;
 }
@@ -9,15 +12,13 @@ std::set<Offer *, bool (*)(Offer *, Offer *)> MarketController::getAsks(const st
 {
 	std::set<Offer *, bool (*)(Offer *, Offer *)> sortedAsks([](Offer *offer1, Offer *offer2){return offer1->price < offer2->price;});
 
-	std::vector<unsigned int> &asks = this->stockController_.getAsks(symbol);
+	std::vector<unsigned int> asks = this->stockController_.getAsks(symbol);
 
-	this->stockController_.getStock(symbol).lockAsksQueueMutex();
 	for(unsigned int offerId : asks){
 		if(this->offerController_.getStatus(offerId) == Offer::PENDING | this->offerController_.getStatus(offerId) == Offer::PROCESSING){
 			sortedAsks.insert(&this->offerController_.getOffer(offerId));
 		}
 	}
-	this->stockController_.getStock(symbol).unlockAsksQueueMutex();
 
 	return sortedAsks;
 }
@@ -26,15 +27,13 @@ std::set<Offer *, bool (*)(Offer *, Offer *)> MarketController::getBids(const st
 {
 	std::set<Offer *, bool (*)(Offer *, Offer *)> sortedBids([](Offer *offer1, Offer *offer2){return offer1->price > offer2->price;});
 
-	std::vector<unsigned int> &bids = this->stockController_.getBids(symbol);
+	std::vector<unsigned int> bids = this->stockController_.getBids(symbol);
 
-	this->stockController_.getStock(symbol).lockBidsQueueMutex();
 	for(unsigned int offerId : bids){
 		if(this->offerController_.getStatus(offerId) == Offer::PENDING | this->offerController_.getStatus(offerId) == Offer::PROCESSING){
 			sortedBids.insert(&this->offerController_.getOffer(offerId));
 		}
 	}
-	this->stockController_.getStock(symbol).unlockBidsQueueMutex();
 
 	return sortedBids;
 }
@@ -90,12 +89,12 @@ void MarketController::executeTrade(const std::string &symbol, Offer *ask, Offer
 	unsigned int quantityTraded = std::min(bid->quantity, ask->quantity);
 
 	// Adjust buyer account
-	bid->account->addShares(symbol, quantityTraded);
-	bid->account->debit(quantityTraded * bid->price);
+	this->accountController_.addShares(bid->accountId_, symbol, quantityTraded);
+	this->accountController_.debit(bid->accountId_, quantityTraded * bid->price);
 
 	// Adjust seller account
-	ask->account->removeShares(symbol, quantityTraded);
-	ask->account->credit(quantityTraded * ask->price);
+	this->accountController_.removeShares(ask->accountId_, symbol, quantityTraded);
+	this->accountController_.credit(ask->accountId_, quantityTraded * ask->price);
 
 	// Check if arbitration required
 	float arbitrationProfit = quantityTraded * (bid->price - ask->price);

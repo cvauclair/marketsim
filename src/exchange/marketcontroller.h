@@ -4,6 +4,7 @@
 #include <set>
 
 #include "exchange.h"
+#include "accountcontroller.h"
 #include "offercontroller.h"
 #include "stockcontroller.h"
 
@@ -19,6 +20,7 @@ class MarketController{
 
 	private:
 		Exchange *exchange_ = nullptr;
+		AccountController accountController_;
 		OfferController offerController_;
 		StockController stockController_;
 };

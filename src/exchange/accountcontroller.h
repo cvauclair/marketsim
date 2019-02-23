@@ -17,6 +17,12 @@ class AccountController{
 		void addShares(unsigned int accountId, const std::string &symbol, unsigned int quantity);
 		void removeShares(unsigned int accountId, const std::string &symbol, unsigned int quantity);
 
+		// Balance actions
+		void setBalance(unsigned int accountId, float balance);
+		float getBalance(unsigned int accountId);
+		void credit(unsigned int accountId, float amount);
+		void debit(unsigned int accountId, float amount);
+
 		// Market actions
 		void buyShares(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price = CURRENT);
 		void sellShares(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price = CURRENT);

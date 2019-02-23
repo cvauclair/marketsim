@@ -16,9 +16,10 @@ class Account{
 		unsigned int getId();
 
 		// Balance methods
+		void setBalance(float balance);
+		float getBalance();
 		void credit(float amount);
 		void debit(float amount);
-		float getBalance();
 
 		// Portfolio methods
 		void addShares(const std::string &symbol, unsigned int quantity);

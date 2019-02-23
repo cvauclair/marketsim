@@ -1,6 +1,8 @@
 #ifndef OFFER_H
 #define OFFER_H
 
+#include <string>
+
 #define CURRENT 0.0
 
 // The Offer class represents a bid or ask offer for a certain currency.
@@ -13,17 +15,15 @@ class Offer{
 		enum OfferStatus{PENDING, PROCESSING, FULFILLED, CANCELLED};
 		enum OfferType{ASK, BID};
 
-		Offer(){};
-		Offer(OfferType type, unsigned int quantity, float price, Account *account);
-
-		unsigned int quantity = 0;
-
-		float price = 0.0;
+		Offer(){}
+		Offer(OfferType type, const std::string &symbol, unsigned int quantity, float price, unsigned int accountId);
 
 		unsigned int offerId = 0;
 
-		Account *account = nullptr;
-
+		std::string symbol_ = "";
+		unsigned int quantity = 0;
+		float price = 0.0;
+		unsigned int accountId_ = 0;
 		OfferStatus status_;
 		OfferType type_;
 

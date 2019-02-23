@@ -28,6 +28,48 @@ void AccountController::removeShares(unsigned int accountId, const std::string &
 	this->exchange_->accounts_[accountId].removeShares(symbol, quantity);
 }
 
+void AccountController::setBalance(unsigned int accountId, float balance)
+{
+	this->validateAccountId(accountId);
+
+	this->exchange_->lockAccountsMutex();
+	this->exchange_->accounts_[accountId].setBalance(balance);
+	this->exchange_->unlockAccountsMutex();
+}
+
+float AccountController::getBalance(unsigned int accountId)
+{
+	this->validateAccountId(accountId);
+
+	this->exchange_->lockAccountsMutex();
+	float balance = this->exchange_->accounts_[accountId].getBalance();
+	this->exchange_->unlockAccountsMutex();
+
+	return balance;
+}
+
+void AccountController::credit(unsigned int accountId, float amount)
+{
+	this->validateAccountId(accountId);
+
+	this->exchange_->lockAccountsMutex();
+	this->exchange_->accounts_[accountId].credit(amount);
+	this->exchange_->unlockAccountsMutex();
+}
+
+void AccountController::debit(unsigned int accountId, float amount)
+{
+	this->validateAccountId(accountId);
+
+	if(amount > this->getBalance(accountId)){
+		throw std::runtime_error("Error: Insufficient funds account " + std::to_string(accountId));
+	}
+
+	this->exchange_->lockAccountsMutex();
+	this->exchange_->accounts_[accountId].debit(amount);
+	this->exchange_->unlockAccountsMutex();
+}
+
 void AccountController::buyShares(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price)
 {
 	this->validateAccountId(accountId);
@@ -115,14 +157,6 @@ std::vector<unsigned int> AccountController::getPendingOffers(unsigned int accou
 
 	return offerIds;
 }
-
-//std::vector<Offer *> &AccountController::getOffers(unsigned int accountId, const std::string &symbol)
-//{
-//	this->validateAccountId(accountId);
-//	this->stockController_.validateStockSymbol(symbol);
-
-//	return this->exchange_->accounts_[accountId].getOffers();
-//}
 
 void AccountController::cancelOffer(unsigned int offerId)
 {

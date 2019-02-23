@@ -51,6 +51,11 @@ unsigned int Account::getId()
 	return this->accountId_;
 }
 
+void Account::setBalance(float balance)
+{
+	this->balance_  = balance;
+}
+
 std::unordered_map<std::string, unsigned int> &Account::getPortfolio()
 {
 	return this->portfolio_;

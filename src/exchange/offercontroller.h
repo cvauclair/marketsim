@@ -12,8 +12,10 @@ class OfferController{
 		Offer *createBid(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price);
 
 		Offer &getOffer(unsigned int offerId);
-		float getPrice(unsigned int offerId);
+
+		std::string getSymbol(unsigned int offerId);
 		unsigned int getQuantity(unsigned int offerId);
+		float getPrice(unsigned int offerId);
 		Offer::OfferStatus getStatus(unsigned int offerId);
 		Offer::OfferType getType(unsigned int offerId);
 

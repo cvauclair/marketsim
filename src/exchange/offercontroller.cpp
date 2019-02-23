@@ -11,7 +11,7 @@ Offer *OfferController::createAsk(unsigned int accountId, const std::string &sym
 	this->sController_.validateStockSymbol(symbol);
 
 	// Create new offer
-	Offer newOffer(Offer::ASK, quantity, price, &(this->exchange_->accounts_[accountId]));
+	Offer newOffer(Offer::ASK, symbol, quantity, price, accountId);
 
 	this->exchange_->lockOffersMutex();
 	this->exchange_->offers_[newOffer.offerId] = newOffer;
@@ -31,7 +31,7 @@ Offer *OfferController::createBid(unsigned int accountId, const std::string &sym
 	this->sController_.validateStockSymbol(symbol);
 
 	// Create new offer
-	Offer newOffer(Offer::BID, quantity, price, &(this->exchange_->accounts_[accountId]));
+	Offer newOffer(Offer::BID, symbol, quantity, price, accountId);
 
 	this->exchange_->lockOffersMutex();
 	this->exchange_->offers_[newOffer.offerId] = newOffer;
@@ -50,6 +50,17 @@ Offer &OfferController::getOffer(unsigned int offerId)
 	this->validateOfferId(offerId);
 
 	return this->exchange_->offers_[offerId];
+}
+
+std::string OfferController::getSymbol(unsigned int offerId)
+{
+	this->validateOfferId(offerId);
+
+	this->exchange_->lockOffersMutex();
+	std::string symbol = this->exchange_->offers_[offerId].symbol_;
+	this->exchange_->unlockOffersMutex();
+
+	return symbol;
 }
 
 float OfferController::getPrice(unsigned int offerId)

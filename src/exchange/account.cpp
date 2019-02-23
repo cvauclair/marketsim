@@ -56,33 +56,12 @@ std::unordered_map<std::string, unsigned int> &Account::getPortfolio()
 	return this->portfolio_;
 }
 
-void Account::addOffer(Offer *offer)
+void Account::addOffer(unsigned int offerId)
 {
-	this->offers_[offer->offerId] = offer;
+	this->pendingOffersIds_.push_back(offerId);
 }
 
-float Account::getTotalBidsValue(const std::string &symbol)
+std::vector<unsigned int> &Account::getPendingOffersId()
 {
-	float totalValue = 0.0f;
-
-	for(const std::pair<unsigned int, Offer *> &offerPair: this->offers_){
-		if(offerPair.second->type_ == Offer::BID){
-			totalValue += offerPair.second->price * offerPair.second->quantity;
-		}
-	}
-
-	return totalValue;
-}
-
-unsigned int Account::getTotalAsksSize(const std::string &symbol)
-{
-	unsigned int totalSize = 0;
-
-	for(const std::pair<unsigned int, Offer *> &offerPair: this->offers_){
-		if(offerPair.second->type_ == Offer::ASK){
-			totalSize += offerPair.second->price * offerPair.second->quantity;
-		}
-	}
-
-	return totalSize;
+	return this->pendingOffersIds_;
 }

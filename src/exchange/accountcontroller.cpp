@@ -5,11 +5,11 @@ AccountController::AccountController(Exchange &exchange): offerController_(excha
 	this->exchange_ = &exchange;
 }
 
-Account &AccountController::createAccount()
+unsigned int AccountController::createAccount()
 {
 	Account newAccount;
 	this->exchange_->accounts_[newAccount.getId()] = newAccount;
-	return this->exchange_->accounts_[newAccount.getId()];
+	return newAccount.getId();
 }
 
 void AccountController::addShares(unsigned int accountId, const std::string &symbol, unsigned int quantity)

@@ -9,7 +9,7 @@ std::uniform_int_distribution<> Agent::price(10, 30);
 
 Agent::Agent(Exchange &exchange) : aController_(exchange), sController_(exchange)
 {
-	this->accountId_ = this->aController_.createAccount().getId();
+	this->accountId_ = this->aController_.createAccount();
 
 	// Give all accounts 100 AAPL shares
 	this->aController_.addShares(this->accountId_, "AAPL", 100);

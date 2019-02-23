@@ -11,7 +11,7 @@ class AccountController{
 	public:
 		AccountController(Exchange &exchange);
 
-		Account &createAccount();
+		unsigned int createAccount();
 
 		// Set up actions
 		void addShares(unsigned int accountId, const std::string &symbol, unsigned int quantity);

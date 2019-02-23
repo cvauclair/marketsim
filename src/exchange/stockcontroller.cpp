@@ -12,14 +12,14 @@ Stock &StockController::getStock(const std::string &symbol)
 	return this->exchange_->stocks_[symbol];
 }
 
-std::vector<Offer> &StockController::getAsks(const std::string &symbol)
+std::vector<unsigned int> &StockController::getAsks(const std::string &symbol)
 {
 	this->validStockSymbol(symbol);
 
 	return  this->exchange_->stocks_[symbol].getAsks();
 }
 
-std::vector<Offer> &StockController::getBids(const std::string &symbol)
+std::vector<unsigned int> &StockController::getBids(const std::string &symbol)
 {
 	this->validStockSymbol(symbol);
 

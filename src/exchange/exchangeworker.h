@@ -8,7 +8,7 @@
 class Exchange;
 class ExchangeWorker{
 	public:
-		ExchangeWorker(Exchange &exchange, std::vector<std::string> &stockSymbols);
+		ExchangeWorker(Exchange &exchange, const std::vector<std::string> &stockSymbols);
 
 		void start();
 		void run();

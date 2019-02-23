@@ -5,44 +5,134 @@ OfferController::OfferController(Exchange &exchange): sController_(exchange)
 	this->exchange_ = &exchange;
 }
 
-Offer &OfferController::createAsk(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price)
+Offer *OfferController::createAsk(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price)
 {
 	// Validate arguments
 	this->sController_.validateStockSymbol(symbol);
 
 	// Create new offer
 	Offer newOffer(Offer::ASK, quantity, price, &(this->exchange_->accounts_[accountId]));
-	this->exchange_->stocks_[symbol].addAsk(newOffer);
+
+	this->exchange_->lockOffersMutex();
+	this->exchange_->offers_[newOffer.offerId] = newOffer;
+	this->exchange_->unlockOffersMutex();
+
+	this->exchange_->lockStocksMutex();
+	this->exchange_->stocks_[symbol].addAsk(newOffer.offerId);
+	this->exchange_->unlockStocksMutex();
 
 	// Return newly created offer
-	return this->exchange_->stocks_[symbol].getAsks().back();
+	return &this->exchange_->offers_[newOffer.offerId];
 }
 
-Offer &OfferController::createBid(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price)
+Offer *OfferController::createBid(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price)
 {
 	// Validate arguments
 	this->sController_.validateStockSymbol(symbol);
 
 	// Create new offer
 	Offer newOffer(Offer::BID, quantity, price, &(this->exchange_->accounts_[accountId]));
-	this->exchange_->stocks_[symbol].addBid(newOffer);
+
+	this->exchange_->lockOffersMutex();
+	this->exchange_->offers_[newOffer.offerId] = newOffer;
+	this->exchange_->unlockOffersMutex();
+
+	this->exchange_->lockStocksMutex();
+	this->exchange_->stocks_[symbol].addBid(newOffer.offerId);
+	this->exchange_->unlockStocksMutex();
 
 	// Return newly created offer
-	return this->exchange_->stocks_[symbol].getBids().back();
+	return &this->exchange_->offers_[newOffer.offerId];
+}
+
+Offer &OfferController::getOffer(unsigned int offerId)
+{
+	this->validateOfferId(offerId);
+
+	return this->exchange_->offers_[offerId];
+}
+
+float OfferController::getPrice(unsigned int offerId)
+{
+	this->validateOfferId(offerId);
+
+	this->exchange_->lockOffersMutex();
+	float price = this->exchange_->offers_[offerId].price;
+	this->exchange_->unlockOffersMutex();
+
+	return price;
+}
+
+unsigned int OfferController::getQuantity(unsigned int offerId)
+{
+	this->validateOfferId(offerId);
+
+	this->exchange_->lockOffersMutex();
+	unsigned int quantity = this->exchange_->offers_[offerId].quantity;
+	this->exchange_->unlockOffersMutex();
+
+	return quantity;
+}
+
+Offer::OfferStatus OfferController::getStatus(unsigned int offerId)
+{
+	this->validateOfferId(offerId);
+
+	this->exchange_->lockOffersMutex();
+	Offer::OfferStatus status = this->exchange_->offers_[offerId].status_;
+	this->exchange_->unlockOffersMutex();
+
+	return status;
+}
+
+Offer::OfferType OfferController::getType(unsigned int offerId)
+{
+	this->validateOfferId(offerId);
+
+	this->exchange_->lockOffersMutex();
+	Offer::OfferType type =  this->exchange_->offers_[offerId].type_;
+	this->exchange_->unlockOffersMutex();
+
+	return type;
 }
 
 void OfferController::cancelOffer(unsigned int offerId)
 {
-	
+	this->validateOfferId(offerId);
+
+	this->exchange_->lockOffersMutex();
+	this->exchange_->offers_[offerId].status_ = Offer::CANCELLED;
+	this->exchange_->unlockOffersMutex();
 }
 
-std::vector<Offer *> OfferController::getAccountOffers(unsigned int accountId, const std::string &symbol)
+bool OfferController::comparePrice(unsigned int offerId1, unsigned int offerId2)
 {
-	std::vector<Offer *> offers;
+	this->validateOfferId(offerId1);
+	this->validateOfferId(offerId2);
 
-	if(!this->sController_.validStockSymbol(symbol)){
-		throw std::runtime_error("Error: Invalid stock symbol " + symbol);
+	this->exchange_->lockOffersMutex();
+	bool smaller =  this->exchange_->offers_[offerId1].price < this->exchange_->offers_[offerId2].price;
+	this->exchange_->unlockOffersMutex();
+
+	return smaller;
+}
+
+void OfferController::validateOfferId(unsigned int offerId)
+{
+	if(!this->validOfferId(offerId)){
+		throw std::runtime_error("Error: Invalid offer id " + std::to_string(offerId));
+	}
+}
+
+bool OfferController::validOfferId(unsigned int offerId)
+{
+	this->exchange_->lockOffersMutex();
+	bool valid = this->exchange_->offers_.find(offerId) != this->exchange_->offers_.end();
+	this->exchange_->unlockOffersMutex();
+
+	if(valid){
+		return true;
 	}
 
-	Stock &stock = this->exchange_->stocks_[symbol];
+	return false;
 }

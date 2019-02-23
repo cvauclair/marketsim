@@ -1,5 +1,9 @@
 #include "exchange.h"
 
+std::mutex Exchange::accountsMutex_;
+std::mutex Exchange::offersMutex_;
+std::mutex Exchange::stocksMutex_;
+
 Exchange::Exchange()
 {
 	// Create exchange account
@@ -10,28 +14,42 @@ Exchange::Exchange()
 		// Create stocks
 		this->stocks_[symbol] = Stock::create(symbol);
 
-		// Create arbitrators
-		this->arbitrators_.emplace_back(&(this->stocks_[symbol]), this->exchangeAccount_);
-
 		Logger::log("debug", "Stock " + symbol + " added", true);
 	}
 }
 
 Exchange::~Exchange()
 {
-	// Stop arbitrators
-	for(Arbitrator &arbitrator : this->arbitrators_){
-		arbitrator.stop();
-	}
-
 	// Delete exchange account
 	delete this->exchangeAccount_;
 }
 
-void Exchange::start()
+void Exchange::lockAccountsMutex()
 {
-	// Start arbitrators
-	for(Arbitrator &arbitrator : this->arbitrators_){
-		arbitrator.start();
-	}
+	while(!this->accountsMutex_.try_lock()){}
+}
+
+void Exchange::unlockAccountsMutex()
+{
+	this->accountsMutex_.unlock();
+}
+
+void Exchange::lockStocksMutex()
+{
+	while(!this->stocksMutex_.try_lock()){}
+}
+
+void Exchange::unlockStocksMutex()
+{
+	this->stocksMutex_.unlock();
+}
+
+void Exchange::lockOffersMutex()
+{
+	while(!this->offersMutex_.try_lock()){}
+}
+
+void Exchange::unlockOffersMutex()
+{
+	this->offersMutex_.unlock();
 }

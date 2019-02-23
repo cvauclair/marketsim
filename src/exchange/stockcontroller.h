@@ -9,8 +9,8 @@ class StockController{
 
 		Stock &getStock(const std::string &symbol);
 
-		std::vector<Offer> &getAsks(const std::string &symbol);
-		std::vector<Offer> &getBids(const std::string &symbol);
+		std::vector<unsigned int> &getAsks(const std::string &symbol);
+		std::vector<unsigned int> &getBids(const std::string &symbol);
 
 		void setLastTradePrice(const std::string &symbol, float lastTradePrice);
 		float getLastTradePrice(const std::string &symbol);

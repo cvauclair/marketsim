@@ -7,7 +7,6 @@
 #include <list>
 
 #include "offer.h"
-#include "logger.h"
 
 class Arbitrator;
 class Stock{
@@ -23,14 +22,11 @@ class Stock{
 
 		std::string &getSymbol();
 
-		void addAsk(unsigned int quantity, float price, Account *account);
-		void addAsk(Offer &offer);
+		void addAsk(unsigned int offerId);
+		void addBid(unsigned int offerId);
 
-		void addBid(unsigned int quantity, float price, Account *account);
-		void addBid(Offer &offer);
-
-		std::vector<Offer> &getAsks();
-		std::vector<Offer> &getBids();
+		std::vector<unsigned int> &getAsks();
+		std::vector<unsigned int> &getBids();
 
 		void setLastTradePrice(float lastTradePrice);
 		float getLastTradePrice();
@@ -54,8 +50,9 @@ class Stock{
 
 		unsigned int volume_ = 0;
 
-		std::vector<Offer> asks_ = {};
-		std::vector<Offer> bids_ = {};
+		// Vector of asks/bids (their ids)
+		std::vector<unsigned int> asks_ = {};
+		std::vector<unsigned int> bids_ = {};
 };
 
 #endif

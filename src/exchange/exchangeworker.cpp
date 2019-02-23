@@ -1,6 +1,6 @@
 #include "exchangeworker.h"
 
-ExchangeWorker::ExchangeWorker(Exchange &exchange, std::vector<std::string> &stockSymbols): marketController_(exchange)
+ExchangeWorker::ExchangeWorker(Exchange &exchange, const std::vector<std::string> &stockSymbols): marketController_(exchange)
 {
 	this->stockSymbols_ = stockSymbols;
 }
@@ -22,4 +22,5 @@ void ExchangeWorker::run()
 void ExchangeWorker::stop()
 {
 	this->stop_ = true;
+	this->thread_->join();
 }

@@ -13,6 +13,7 @@ class Offer{
 		enum OfferStatus{PENDING, PROCESSING, FULFILLED, CANCELLED};
 		enum OfferType{ASK, BID};
 
+		Offer(){};
 		Offer(OfferType type, unsigned int quantity, float price, Account *account);
 
 		unsigned int quantity = 0;

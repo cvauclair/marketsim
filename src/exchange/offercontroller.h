@@ -8,19 +8,51 @@ class OfferController{
 	public:
 		OfferController(Exchange &exchange);
 
-		Offer &createAsk(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price);
-		Offer &createBid(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price);
+		Offer *createAsk(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price);
+		Offer *createBid(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price);
+
+		Offer &getOffer(unsigned int offerId);
+		float getPrice(unsigned int offerId);
+		unsigned int getQuantity(unsigned int offerId);
+		Offer::OfferStatus getStatus(unsigned int offerId);
+		Offer::OfferType getType(unsigned int offerId);
 
 		void cancelOffer(unsigned int offerId);
-
-		std::vector<Offer *> getAccountOffers(unsigned int accountId, const std::string &symbol);
 
 		float getLowestAskPrice(const std::string &symbol);
 		float getHighestBidPrice(const std::string &symbol);
 
+		// Returns true if first offer is priced lower than second offer
+		bool comparePrice(unsigned int offerId1, unsigned int offerId2);
+
+		void validateOfferId(unsigned int offerId);
+		bool validOfferId(unsigned int offerId);
+
+		struct AscendingOrderPriceComparator;
+		struct DescendingOrderPriceComparator;
 	private:
 		StockController sController_;
 		Exchange *exchange_ = nullptr;
+};
+
+struct OfferController::AscendingOrderPriceComparator{
+	AscendingOrderPriceComparator(Exchange &exchange): offerController_(exchange){}
+
+	bool operator()(unsigned int offerId1, unsigned int offerId2){
+		return this->offerController_.getPrice(offerId1) < this->offerController_.getPrice(offerId2);
+	}
+
+	OfferController offerController_;
+};
+
+struct OfferController::DescendingOrderPriceComparator{
+	DescendingOrderPriceComparator(Exchange &exchange): offerController_(exchange){}
+
+	bool operator()(unsigned int offerId1, unsigned int offerId2){
+		return this->offerController_.getPrice(offerId1) > this->offerController_.getPrice(offerId2);
+	}
+
+	OfferController offerController_;
 };
 
 #endif

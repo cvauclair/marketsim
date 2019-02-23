@@ -21,7 +21,6 @@ include_directories(src)
 set(exchangeSRCS
 	"src/exchange/account.cpp"
 	"src/exchange/accountcontroller.cpp"
-	"src/exchange/arbitrator.cpp"
 	"src/exchange/exchange.cpp"
 	"src/exchange/exchangeworker.cpp"
 	"src/exchange/logger.cpp"
@@ -30,7 +29,6 @@ set(exchangeSRCS
 	"src/exchange/offercontroller.cpp"
 	"src/exchange/stock.cpp"
 	"src/exchange/stockcontroller.cpp"
-#	"src/exchange/tradeinterface.cpp"
 	"src/exchange/utility.cpp"
 )
 

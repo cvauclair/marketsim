@@ -3,11 +3,13 @@
 
 #include <unordered_map>
 #include <utility>
+#include <mutex>
 
 #include "account.h"
-#include "arbitrator.h"
 #include "stock.h"
 #include "symbols.h"
+
+#include "logger.h"
 
 // The Exchange class acts as a controller for the whole system
 class Exchange{
@@ -19,18 +21,29 @@ class Exchange{
 		Exchange();
 		~Exchange();
 
-		// Start
-		void start();
+		void lockAccountsMutex();
+		void unlockAccountsMutex();
+
+		void lockStocksMutex();
+		void unlockStocksMutex();
+
+		void lockOffersMutex();
+		void unlockOffersMutex();
 
 	private:
+		// Mutex
+		static std::mutex accountsMutex_;
+		static std::mutex stocksMutex_;
+		static std::mutex offersMutex_;
+
 		// Accounts
 		std::unordered_map<unsigned int, Account> accounts_;
 
 		// Stocks
 		std::unordered_map<std::string, Stock> stocks_;
-		std::vector<ExchangeWorker> arbitrators_;
 
 		// Offers
+		std::unordered_map<unsigned int, Offer> offers_;
 		unsigned int offerCounter_ = 0;
 
 		// House account

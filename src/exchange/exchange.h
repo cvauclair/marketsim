@@ -30,6 +30,8 @@ class Exchange{
 		void lockOffersMutex();
 		void unlockOffersMutex();
 
+		void clear();
+
 	private:
 		// Mutex
 		static std::mutex accountsMutex_;

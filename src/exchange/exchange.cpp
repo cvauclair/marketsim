@@ -53,3 +53,13 @@ void Exchange::unlockOffersMutex()
 {
 	this->offersMutex_.unlock();
 }
+
+void Exchange::clear()
+{
+	this->accounts_.clear();
+
+	this->offers_.clear();
+	this->offerCounter_ = 0;
+
+	this->stocks_.clear();
+}

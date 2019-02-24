@@ -9,14 +9,17 @@ class StockController{
 
 		Stock &getStock(const std::string &symbol);
 
+		void addAsk(const std::string &symbol, unsigned int offerId);
 		std::vector<unsigned int> getAsks(const std::string &symbol);
+
+		void addBid(const std::string &symbol, unsigned int offerId);
 		std::vector<unsigned int> getBids(const std::string &symbol);
 
 		void setLastTradePrice(const std::string &symbol, float lastTradePrice);
 		float getLastTradePrice(const std::string &symbol);
 
-		float getHighestBid(const std::string &symbol);
 		float getLowestAsk(const std::string &symbol);
+		float getHighestBid(const std::string &symbol);
 
 		void setVolume(const std::string &symbol, unsigned int volume);
 		void incrementVolume(const std::string &symbol, unsigned int volume);

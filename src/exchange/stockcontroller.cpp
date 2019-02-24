@@ -12,6 +12,11 @@ Stock &StockController::getStock(const std::string &symbol)
 	return this->exchange_->stocks_[symbol];
 }
 
+void StockController::addAsk(const std::string &symbol, unsigned int offerId)
+{
+
+}
+
 std::vector<unsigned int> StockController::getAsks(const std::string &symbol)
 {
 	this->validStockSymbol(symbol);
@@ -21,6 +26,11 @@ std::vector<unsigned int> StockController::getAsks(const std::string &symbol)
 	this->exchange_->unlockStocksMutex();
 
 	return  asks;
+}
+
+void StockController::addBid(const std::string &symbol, unsigned int offerId)
+{
+
 }
 
 std::vector<unsigned int> StockController::getBids(const std::string &symbol)

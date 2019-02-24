@@ -12,6 +12,16 @@ unsigned int AccountController::createAccount()
 	return newAccount.getId();
 }
 
+void AccountController::setShares(unsigned int accountId, const std::string &symbol, unsigned int quantity)
+{
+
+}
+
+unsigned int AccountController::getShares(unsigned int accountId, const std::string &symbol)
+{
+	return 0;
+}
+
 void AccountController::addShares(unsigned int accountId, const std::string &symbol, unsigned int quantity)
 {
 	this->validateAccountId(accountId);
@@ -80,7 +90,7 @@ void AccountController::buyShares(unsigned int accountId, const std::string &sym
 	this->exchange_->unlockAccountsMutex();
 
 	if(this->getTotalBidsValue(accountId, symbol) + quantity * price > balance){
-		throw std::runtime_error("Error: Insufficient funds");
+		throw std::runtime_error("Error: Insufficient funds account " + std::to_string(accountId));
 	}
 
 	Offer *newOffer = this->offerController_.createBid(accountId, symbol, quantity, price);
@@ -99,7 +109,7 @@ void AccountController::sellShares(unsigned int accountId, const std::string &sy
 	this->exchange_->unlockAccountsMutex();
 
 	if(this->getTotalAsksSize(accountId, symbol) + quantity > numShares){
-		throw std::runtime_error("Error: Insufficient shares " + symbol);
+		throw std::runtime_error("Error: Insufficient " + symbol + " shares account " + std::to_string(accountId));
 	}
 
 	Offer *newOffer = this->offerController_.createAsk(accountId, symbol, quantity, price);

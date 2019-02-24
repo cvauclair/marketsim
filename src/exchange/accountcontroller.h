@@ -14,6 +14,8 @@ class AccountController{
 		unsigned int createAccount();
 
 		// Set up actions
+		void setShares(unsigned int accountId, const std::string &symbol, unsigned int quantity);
+		unsigned int getShares(unsigned int accountId, const std::string &symbol);
 		void addShares(unsigned int accountId, const std::string &symbol, unsigned int quantity);
 		void removeShares(unsigned int accountId, const std::string &symbol, unsigned int quantity);
 

@@ -8,8 +8,8 @@ class OfferController{
 	public:
 		OfferController(Exchange &exchange);
 
-		Offer *createAsk(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price);
-		Offer *createBid(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price);
+		unsigned int createAsk(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price);
+		unsigned int createBid(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price);
 
 		Offer &getOffer(unsigned int offerId);
 

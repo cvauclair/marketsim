@@ -93,10 +93,10 @@ void AccountController::buyShares(unsigned int accountId, const std::string &sym
 		throw std::runtime_error("Error: Insufficient funds account " + std::to_string(accountId));
 	}
 
-	Offer *newOffer = this->offerController_.createBid(accountId, symbol, quantity, price);
-	this->exchange_->accounts_[accountId].addOffer(newOffer->offerId);
+	unsigned int newOfferId = this->offerController_.createBid(accountId, symbol, quantity, price);
+	this->exchange_->accounts_[accountId].addOffer(newOfferId);
 
-	Logger::log("info", "Offer " + std::to_string(newOffer->offerId) + ": Buy " + std::to_string(quantity) + " " + symbol + " @ " + std::to_string(price), true);
+	Logger::log("info", "Offer " + std::to_string(newOfferId) + ": Buy " + std::to_string(quantity) + " " + symbol + " @ " + std::to_string(price), true);
 }
 
 void AccountController::sellShares(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price)
@@ -112,10 +112,10 @@ void AccountController::sellShares(unsigned int accountId, const std::string &sy
 		throw std::runtime_error("Error: Insufficient " + symbol + " shares account " + std::to_string(accountId));
 	}
 
-	Offer *newOffer = this->offerController_.createAsk(accountId, symbol, quantity, price);
-	this->exchange_->accounts_[accountId].addOffer(newOffer->offerId);
+	unsigned int newOfferId = this->offerController_.createAsk(accountId, symbol, quantity, price);
+	this->exchange_->accounts_[accountId].addOffer(newOfferId);
 
-	Logger::log("info", "Offer " + std::to_string(newOffer->offerId) + ": Sell " + std::to_string(quantity) + " " + symbol + " @ " + std::to_string(price), true);
+	Logger::log("info", "Offer " + std::to_string(newOfferId) + ": Sell " + std::to_string(quantity) + " " + symbol + " @ " + std::to_string(price), true);
 }
 
 float AccountController::getTotalBidsValue(unsigned int accountId, const std::string &symbol)

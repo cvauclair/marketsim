@@ -129,13 +129,3 @@ void MarketController::executeTrade(const std::string &symbol, unsigned int askI
 
 	Logger::log("info", symbol + " " + std::to_string(quantityTraded) + " quantity traded", true);
 }
-
-bool MarketController::ascendingOrderComparator(unsigned int offerId1, unsigned int offerId2, OfferController &offerController)
-{
-	return offerController.comparePrice(offerId1, offerId2);
-}
-
-bool MarketController::descendingOrderComparator(unsigned int offerId1, unsigned int offerId2, OfferController &offerController)
-{
-	return !offerController.comparePrice(offerId1, offerId2);
-}

@@ -62,24 +62,4 @@ class OfferController{
 		Exchange *exchange_ = nullptr;
 };
 
-struct OfferController::AscendingOrderPriceComparator{
-	AscendingOrderPriceComparator(Exchange &exchange): offerController_(exchange){}
-
-	bool operator()(unsigned int offerId1, unsigned int offerId2){
-		return this->offerController_.getPrice(offerId1) < this->offerController_.getPrice(offerId2);
-	}
-
-	OfferController offerController_;
-};
-
-struct OfferController::DescendingOrderPriceComparator{
-	DescendingOrderPriceComparator(Exchange &exchange): offerController_(exchange){}
-
-	bool operator()(unsigned int offerId1, unsigned int offerId2){
-		return this->offerController_.getPrice(offerId1) > this->offerController_.getPrice(offerId2);
-	}
-
-	OfferController offerController_;
-};
-
 #endif

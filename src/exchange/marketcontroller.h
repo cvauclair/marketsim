@@ -25,9 +25,6 @@ class MarketController{
 		void executeTrade(const std::string &symbol, unsigned int askId, unsigned int bidId);
 
 	private:
-		static bool ascendingOrderComparator(unsigned int offerId1, unsigned int offerId2, OfferController &offerController);
-		static bool descendingOrderComparator(unsigned int offerId1, unsigned int offerId2, OfferController &offerController);
-
 		Exchange *exchange_ = nullptr;
 		AccountController accountController_;
 		OfferController offerController_;

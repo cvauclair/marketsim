@@ -45,6 +45,19 @@ unsigned int OfferController::createBid(unsigned int accountId, const std::strin
 	return newOffer.offerId;
 }
 
+Offer OfferController::getOfferCopy(unsigned int offerId)
+{
+	this->validateOfferId(offerId);
+
+	Offer offer;
+
+	this->exchange_->lockOffersMutex();
+	offer = this->exchange_->offers_[offerId];
+	this->exchange_->unlockOffersMutex();
+
+	return offer;
+}
+
 Offer &OfferController::getOffer(unsigned int offerId)
 {
 	this->validateOfferId(offerId);

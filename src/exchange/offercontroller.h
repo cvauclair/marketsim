@@ -11,7 +11,8 @@ class OfferController{
 		unsigned int createAsk(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price);
 		unsigned int createBid(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price);
 
-		Offer &getOffer(unsigned int offerId);
+		// Returns a COPY of the Offer object associated with offerId (if valid)
+		Offer getOfferCopy(unsigned int offerId);
 
 		std::string getSymbol(unsigned int offerId);
 		unsigned int getQuantity(unsigned int offerId);
@@ -32,6 +33,9 @@ class OfferController{
 
 		struct AscendingOrderPriceComparator;
 		struct DescendingOrderPriceComparator;
+
+		Offer &getOffer(unsigned int offerId);
+
 	private:
 		StockController sController_;
 		Exchange *exchange_ = nullptr;

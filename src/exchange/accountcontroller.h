@@ -11,6 +11,10 @@ class AccountController{
 	public:
 		AccountController(Exchange &exchange);
 
+		// Returns a COPY of the account associated with accountId (if valid)
+		Account getAccountCopy(unsigned int accountId);
+
+		// Create a new account and returns its id
 		unsigned int createAccount();
 
 		// Set up actions

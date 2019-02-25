@@ -14,13 +14,13 @@ Note: This is a work in progress and the features listed below are what the proj
 * The exchange and simulation running in parallel in the same process
 * The exchange featuring only one stock
 * A mostly random simulation of ask and bid offers
+* Configurable stock symbols (via config/stocks.lua)
 
 ### Planned features (in the short-term)
 * Client-server separation
 * GUI client to observe the stock market in real time
 * Ability to have multiple stocks listed on the exchange server
 * More realistic agent behavior
-* Lua config files
 
 ### Planned features (in the long-term)
 * Support for more financial instruments (e.g.: stock options and futures)

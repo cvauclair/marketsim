@@ -29,13 +29,13 @@ int main(int argc, char **argv)
 	StockController sController(exchange);
 
 	// Run simulation
-	Simulation sim(exchange, 50);
+	Simulation sim(exchange, 100);
 
 	std::this_thread::sleep_for(chrono::seconds(2));
 
 	sim.start();
 
-	std::this_thread::sleep_for(chrono::seconds(10));
+	std::this_thread::sleep_for(chrono::seconds(20));
 
 	worker.stop();
 	sim.stop();

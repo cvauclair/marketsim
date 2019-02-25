@@ -20,13 +20,11 @@ class Agent{
 		// Random number generators
 		static std::random_device rd;	//Will be used to obtain a seed for the random number engine
 		static std::mt19937 gen;				//Standard mersenne_twister_engine seeded with rd()
-		static std::uniform_int_distribution<> binary;
-		static std::uniform_real_distribution<> percent;
-		static std::uniform_int_distribution<> quantity;
-		static std::uniform_int_distribution<> price;
+		static std::uniform_real_distribution<> random;
 
 		// Agent members
 		AccountController aController_;
+		OfferController oController_;
 		StockController sController_;
 		unsigned int accountId_ = 0;
 };

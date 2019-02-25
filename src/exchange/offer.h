@@ -2,6 +2,7 @@
 #define OFFER_H
 
 #include <string>
+#include <math.h>
 
 #define CURRENT 0.0
 
@@ -28,6 +29,7 @@ class Offer{
 		OfferType type_;
 
 	static unsigned int offerCounter;
+	static float round(float price);
 };
 
 #endif

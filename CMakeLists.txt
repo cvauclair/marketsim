@@ -15,13 +15,20 @@ set(CMAKE_AUTOUIC ON)
 
 # Find the QtWidgets library
 find_package(Qt5Widgets CONFIG REQUIRED)
+
+# Find threading library
 find_package(Threads)
 
-include_directories(src test)
+# Find lua library
+find_package(Lua REQUIRED)
+set(LUA_LIBRARIES "/usr/lib/liblua5.3.so")
+
+include_directories(src test include ${LUA_INCLUDE_DIR})
 
 set(exchangeSRCS
 	"src/exchange/account.cpp"
 	"src/exchange/accountcontroller.cpp"
+	"src/exchange/configloader.cpp"
 	"src/exchange/exchange.cpp"
 	"src/exchange/exchangeworker.cpp"
 	"src/exchange/logger.cpp"
@@ -62,7 +69,7 @@ add_library(gui SHARED ${guiSRCS})
 target_link_libraries(gui Qt5::Widgets)
 
 add_executable(marketsim ${marketsimSRCS})
-target_link_libraries(marketsim exchange gui simulation Qt5::Widgets)
+target_link_libraries(marketsim exchange gui simulation Qt5::Widgets ${LUA_LIBRARIES})
 
 add_executable(test ${testSRCS})
-target_link_libraries(test exchange ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(test exchange ${CMAKE_THREAD_LIBS_INIT} ${LUA_LIBRARIES})

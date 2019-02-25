@@ -10,7 +10,7 @@ Exchange::Exchange()
 	this->exchangeAccount_ = new Account();
 
 	// Load data
-	for(const std::string &symbol : SYMBOLS){
+	for(const std::string &symbol : ConfigLoader::loadStocks("/home/christophe/Documents/Programming/marketsim/config/stocks.lua")){
 		// Create stocks
 		this->stocks_[symbol] = Stock::create(symbol);
 

@@ -9,6 +9,8 @@
 #include "stock.h"
 #include "symbols.h"
 
+#include "configloader.h"
+
 #include "logger.h"
 
 // The Exchange class acts as a controller for the whole system

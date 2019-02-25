@@ -4,6 +4,7 @@ A C++ stock market simulator
 
 ## Overview
 Note: This is a work in progress and the features listed below are what the project intends to be.
+
 **marketsim** is an agent based stock market simulator which features three main components: 
 * The exchange server, which receives bid and ask offers, matches buyers and sellers and hold the account information of all market participants
 * The simulation client, which interacts with the exchange server to simulate realistic market agent behavior

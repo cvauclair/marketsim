@@ -30,7 +30,17 @@ void setup(){
 }
 
 TEST_CASE("Add ask to stock", "[StockController]"){
-	setup();
+	// Clear exchange
+	exchange.clear();
+
+	// Create and setup dummy account
+	accountId = accountController.createAccount();
+	accountController.addShares(accountId, "AAPL", 100);
+
+	// Add offers
+	askOfferId = offerController.createAsk(accountId, "AAPL", 10, 5.0f);
+
+	// Desired asks
 	std::vector<unsigned int> desiredAsks = {askOfferId};
 
 	REQUIRE_NOTHROW(stockController.addAsk("AAPL", askOfferId));
@@ -54,11 +64,11 @@ TEST_CASE("Add bid to stock", "[StockController]"){
 }
 
 TEST_CASE("Get bids of stock", "[StockController]"){
-	Exchange exchange;
-	OfferController offerController(exchange);
-	StockController stockController(exchange);
+	setup();
+	stockController.addAsk("AAPL", bidOfferId);
+	std::vector<unsigned int> desiredBids = {bidOfferId};
 
-	// TODO
+	REQUIRE(stockController.getBids("AAPL") == desiredBids);
 }
 
 TEST_CASE("Set last trade price", "[StockController]"){

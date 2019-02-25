@@ -141,5 +141,5 @@ void MarketController::executeTrade(const std::string &symbol, unsigned int askI
 	// Update last trade price
 	this->stockController_.setLastTradePrice(symbol, bidPrice);
 
-	Logger::log("info", symbol + " " + std::to_string(quantityTraded) + " quantity traded", true);
+	Logger::log("info", symbol + " " + std::to_string(quantityTraded) + " quantity traded @ " + std::to_string(bidPrice), true);
 }

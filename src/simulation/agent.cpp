@@ -23,21 +23,19 @@ Agent::~Agent()
 void Agent::doAction()
 {
 	std::vector<unsigned int> offerIds = {};
-	if(Agent::percent(gen) < 0.0001){
-		offerIds = this->aController_.getPendingOffers(this->accountId_, "AAPL");
+	offerIds = this->aController_.getPendingOffers(this->accountId_, "AAPL");
 
-		// Decide buy/sell
-		if(Agent::binary(gen) == 1){
-			if(offerIds.size() > 0){
-				this->aController_.cancelOffer(offerIds.front());
-			}
-			this->aController_.buyShares(this->accountId_, "AAPL", Agent::quantity(gen), Agent::price(gen));
-		}else {
-			if(offerIds.size() > 0){
-				this->aController_.cancelOffer(offerIds.front());
-			}
-			this->aController_.sellShares(this->accountId_, "AAPL", Agent::quantity(gen), Agent::price(gen));
+	// Decide buy/sell
+	if(Agent::binary(gen) == 1){
+		if(offerIds.size() > 0){
+			this->aController_.cancelOffer(offerIds.front());
 		}
+		this->aController_.buyShares(this->accountId_, "AAPL", Agent::quantity(gen), Agent::price(gen));
+	}else {
+		if(offerIds.size() > 0){
+			this->aController_.cancelOffer(offerIds.front());
+		}
+		this->aController_.sellShares(this->accountId_, "AAPL", Agent::quantity(gen), Agent::price(gen));
 	}
 }
 

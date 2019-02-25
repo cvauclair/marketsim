@@ -26,9 +26,8 @@ Note: This is a work in progress and the features listed below are what the proj
 * Support for more financial instruments (e.g.: stock options and futures)
 
 ## Building
-Dependencies:
+Dependencies (not included in `deps/` directory):
 * Qt5 library (for the GUI client)
-* Catch2 (for the tests)
 
 The exchange server and simulation client have no dependencies. The GUI client and tests can be commented out of the CMakeLists.txt file if one does not wish to compile those.
 

@@ -23,7 +23,7 @@ find_package(Threads)
 find_package(Lua REQUIRED)
 set(LUA_LIBRARIES "/usr/lib/liblua5.3.so")
 
-include_directories(src test include ${LUA_INCLUDE_DIR})
+include_directories(src test deps ${LUA_INCLUDE_DIR})
 
 set(exchangeSRCS
 	"src/exchange/account.cpp"

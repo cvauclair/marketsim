@@ -5,6 +5,19 @@ AccountController::AccountController(Exchange &exchange): offerController_(excha
 	this->exchange_ = &exchange;
 }
 
+Account AccountController::getAccountCopy(unsigned int accountId)
+{
+	this->validateAccountId(accountId);
+
+	Account account;
+
+	this->exchange_->lockAccountsMutex();
+	account = this->exchange_->accounts_[accountId];
+	this->exchange_->unlockAccountsMutex();
+
+	return account;
+}
+
 unsigned int AccountController::createAccount()
 {
 	Account newAccount;

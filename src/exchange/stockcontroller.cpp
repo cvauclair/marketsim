@@ -5,11 +5,17 @@ StockController::StockController(Exchange &exchange)
 	this->exchange_ = &exchange;
 }
 
-Stock &StockController::getStock(const std::string &symbol)
+Stock StockController::getStockCopy(const std::string &symbol)
 {
 	this->validateStockSymbol(symbol);
 
-	return this->exchange_->stocks_[symbol];
+	Stock stock;
+
+	this->exchange_->lockStocksMutex();
+	stock = this->exchange_->stocks_[symbol];
+	this->exchange_->unlockStocksMutex();
+
+	return stock;
 }
 
 void StockController::addAsk(const std::string &symbol, unsigned int offerId)

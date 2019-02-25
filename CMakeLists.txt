@@ -57,6 +57,7 @@ set(marketsimSRCS
 set(testSRCS
 	"test/test.cpp"
 	"test/exchange/accountcontroller_tests.cpp"
+	"test/exchange/marketcontroller_tests.cpp"
 	"test/exchange/stockcontroller_tests.cpp"
 )
 

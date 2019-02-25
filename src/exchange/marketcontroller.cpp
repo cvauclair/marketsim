@@ -42,16 +42,30 @@ std::vector<unsigned int> MarketController::getSortedBids(const std::string &sym
 
 void MarketController::sortAscendingOrder(std::vector<unsigned int> &offerIds)
 {
+	// Locking all of the exchange's mutexes fixes a crash where one of the offer ids was set to 0 mid sorting
+	this->exchange_->lockAccountsMutex();
+	this->exchange_->lockStocksMutex();
+
 	std::sort(offerIds.begin(), offerIds.end(), [this](const unsigned int &offerId1, const unsigned int &offerId2){
 		return this->offerController_.comparePrice(offerId1, offerId2);
 	});
+
+	this->exchange_->unlockAccountsMutex();
+	this->exchange_->unlockStocksMutex();
 }
 
 void MarketController::sortDescendingOrder(std::vector<unsigned int> &offerIds)
 {
+	// Locking all of the exchange's mutexes fixes a crash where one of the offer ids was set to 0 mid sorting
+	this->exchange_->lockAccountsMutex();
+	this->exchange_->lockStocksMutex();
+
 	std::sort(offerIds.begin(), offerIds.end(), [this](const unsigned int &offerId1, const unsigned int &offerId2){
 		return !this->offerController_.comparePrice(offerId1, offerId2);
 	});
+
+	this->exchange_->unlockAccountsMutex();
+	this->exchange_->unlockStocksMutex();
 }
 
 void MarketController::resolveOffers(const std::string &symbol)

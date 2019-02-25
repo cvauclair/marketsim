@@ -76,6 +76,24 @@ std::string OfferController::getSymbol(unsigned int offerId)
 	return symbol;
 }
 
+void OfferController::setQuantity(unsigned int offerId, unsigned int quantity)
+{
+	this->validateOfferId(offerId);
+
+	this->exchange_->lockOffersMutex();
+	this->exchange_->offers_[offerId].quantity = quantity;
+	this->exchange_->unlockOffersMutex();
+}
+
+void OfferController::decrementQuantity(unsigned int offerId, unsigned int decrement)
+{
+	this->validateOfferId(offerId);
+
+	this->exchange_->lockOffersMutex();
+	this->exchange_->offers_[offerId].quantity -= decrement;
+	this->exchange_->unlockOffersMutex();
+}
+
 float OfferController::getPrice(unsigned int offerId)
 {
 	this->validateOfferId(offerId);
@@ -85,6 +103,37 @@ float OfferController::getPrice(unsigned int offerId)
 	this->exchange_->unlockOffersMutex();
 
 	return price;
+}
+
+void OfferController::setAccountId(unsigned int offerId, unsigned int accountId)
+{
+	this->validateOfferId(offerId);
+
+	this->exchange_->lockOffersMutex();
+	this->exchange_->offers_[offerId].accountId_ = accountId;
+	this->exchange_->unlockOffersMutex();
+}
+
+unsigned int OfferController::getAccountId(unsigned int offerId)
+{
+	this->validateOfferId(offerId);
+
+	unsigned int accountId = 0;
+
+	this->exchange_->lockOffersMutex();
+	accountId = this->exchange_->offers_[offerId].accountId_;
+	this->exchange_->unlockOffersMutex();
+
+	return accountId;
+}
+
+void OfferController::setStatus(unsigned int offerId, Offer::OfferStatus status)
+{
+	this->validateOfferId(offerId);
+
+	this->exchange_->lockOffersMutex();
+	this->exchange_->offers_[offerId].status_ = status;
+	this->exchange_->unlockOffersMutex();
 }
 
 unsigned int OfferController::getQuantity(unsigned int offerId)
@@ -107,6 +156,15 @@ Offer::OfferStatus OfferController::getStatus(unsigned int offerId)
 	this->exchange_->unlockOffersMutex();
 
 	return status;
+}
+
+void OfferController::setType(unsigned offerId, Offer::OfferType type)
+{
+	this->validateOfferId(offerId);
+
+	this->exchange_->lockOffersMutex();
+	this->exchange_->offers_[offerId].type_ = type;
+	this->exchange_->unlockOffersMutex();
 }
 
 Offer::OfferType OfferController::getType(unsigned int offerId)

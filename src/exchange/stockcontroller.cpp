@@ -27,8 +27,10 @@ std::vector<unsigned int> StockController::getAsks(const std::string &symbol)
 {
 	this->validStockSymbol(symbol);
 
+	std::vector<unsigned int> asks;
+
 	this->exchange_->lockStocksMutex();
-	std::vector<unsigned int> asks = this->exchange_->stocks_[symbol].getAsks();
+	asks = this->exchange_->stocks_[symbol].getAsks();
 	this->exchange_->unlockStocksMutex();
 
 	return  asks;
@@ -43,8 +45,10 @@ std::vector<unsigned int> StockController::getBids(const std::string &symbol)
 {
 	this->validStockSymbol(symbol);
 
+	std::vector<unsigned int> bids;
+
 	this->exchange_->lockStocksMutex();
-	std::vector<unsigned int> bids = this->exchange_->stocks_[symbol].getBids();
+	bids = this->exchange_->stocks_[symbol].getBids();
 	this->exchange_->unlockStocksMutex();
 
 	return  bids;

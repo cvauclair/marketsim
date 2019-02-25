@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include "Catch2/catch.hpp"
 
 #include "exchange/exchange.h"
 #include "exchange/stockcontroller.h"

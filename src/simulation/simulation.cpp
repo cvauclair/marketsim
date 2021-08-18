@@ -28,6 +28,7 @@ void Simulation::run()
 				Logger::log("error", e.what());
 			}
 		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
 }
 

@@ -5,6 +5,19 @@ AccountController::AccountController(Exchange &exchange): offerController_(excha
 	this->exchange_ = &exchange;
 }
 
+Account AccountController::getAccountCopy(unsigned int accountId)
+{
+	this->validateAccountId(accountId);
+
+	Account account;
+
+	this->exchange_->lockAccountsMutex();
+	account = this->exchange_->accounts_[accountId];
+	this->exchange_->unlockAccountsMutex();
+
+	return account;
+}
+
 unsigned int AccountController::createAccount()
 {
 	Account newAccount;
@@ -96,7 +109,7 @@ void AccountController::buyShares(unsigned int accountId, const std::string &sym
 	unsigned int newOfferId = this->offerController_.createBid(accountId, symbol, quantity, price);
 	this->exchange_->accounts_[accountId].addOffer(newOfferId);
 
-	Logger::log("info", "Offer " + std::to_string(newOfferId) + ": Buy " + std::to_string(quantity) + " " + symbol + " @ " + std::to_string(price), true);
+	Logger::log("info", "Offer " + std::to_string(newOfferId) + ": Buy " + std::to_string(quantity) + " " + symbol + " @ " + std::to_string(price));
 }
 
 void AccountController::sellShares(unsigned int accountId, const std::string &symbol, unsigned int quantity, float price)
@@ -115,7 +128,7 @@ void AccountController::sellShares(unsigned int accountId, const std::string &sy
 	unsigned int newOfferId = this->offerController_.createAsk(accountId, symbol, quantity, price);
 	this->exchange_->accounts_[accountId].addOffer(newOfferId);
 
-	Logger::log("info", "Offer " + std::to_string(newOfferId) + ": Sell " + std::to_string(quantity) + " " + symbol + " @ " + std::to_string(price), true);
+	Logger::log("info", "Offer " + std::to_string(newOfferId) + ": Sell " + std::to_string(quantity) + " " + symbol + " @ " + std::to_string(price));
 }
 
 float AccountController::getTotalBidsValue(unsigned int accountId, const std::string &symbol)

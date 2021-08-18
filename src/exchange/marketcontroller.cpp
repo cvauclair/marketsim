@@ -8,114 +8,138 @@ MarketController::MarketController(Exchange &exchange):
 	this->exchange_ = &exchange;
 }
 
-std::set<Offer *, bool (*)(Offer *, Offer *)> MarketController::getAsks(const std::string &symbol)
+std::vector<unsigned int> MarketController::getSortedAsks(const std::string &symbol)
 {
-	std::set<Offer *, bool (*)(Offer *, Offer *)> sortedAsks([](Offer *offer1, Offer *offer2){return offer1->price < offer2->price;});
-
+	std::vector<unsigned int> sortedAsks;
 	std::vector<unsigned int> asks = this->stockController_.getAsks(symbol);
 
-	for(unsigned int offerId : asks){
+	for(unsigned int offerId: asks){
 		if(this->offerController_.getStatus(offerId) == Offer::PENDING | this->offerController_.getStatus(offerId) == Offer::PROCESSING){
-			sortedAsks.insert(&this->offerController_.getOffer(offerId));
+			sortedAsks.push_back(offerId);
 		}
 	}
+
+	this->sortAscendingOrder(sortedAsks);
 
 	return sortedAsks;
 }
 
-std::set<Offer *, bool (*)(Offer *, Offer *)> MarketController::getBids(const std::string &symbol)
+std::vector<unsigned int> MarketController::getSortedBids(const std::string &symbol)
 {
-	std::set<Offer *, bool (*)(Offer *, Offer *)> sortedBids([](Offer *offer1, Offer *offer2){return offer1->price > offer2->price;});
-
+	std::vector<unsigned int> sortedBids;
 	std::vector<unsigned int> bids = this->stockController_.getBids(symbol);
 
 	for(unsigned int offerId : bids){
 		if(this->offerController_.getStatus(offerId) == Offer::PENDING | this->offerController_.getStatus(offerId) == Offer::PROCESSING){
-			sortedBids.insert(&this->offerController_.getOffer(offerId));
+			sortedBids.push_back(offerId);
 		}
 	}
 
+	this->sortAscendingOrder(sortedBids);
+
 	return sortedBids;
+}
+
+void MarketController::sortAscendingOrder(std::vector<unsigned int> &offerIds)
+{
+	// Locking all of the exchange's mutexes fixes a crash where one of the offer ids was set to 0 mid sorting
+	this->exchange_->lockAccountsMutex();
+	this->exchange_->lockStocksMutex();
+
+	std::sort(offerIds.begin(), offerIds.end(), [this](const unsigned int &offerId1, const unsigned int &offerId2){
+		return this->offerController_.comparePrice(offerId1, offerId2);
+	});
+
+	this->exchange_->unlockAccountsMutex();
+	this->exchange_->unlockStocksMutex();
+}
+
+void MarketController::sortDescendingOrder(std::vector<unsigned int> &offerIds)
+{
+	// Locking all of the exchange's mutexes fixes a crash where one of the offer ids was set to 0 mid sorting
+	this->exchange_->lockAccountsMutex();
+	this->exchange_->lockStocksMutex();
+
+	std::sort(offerIds.begin(), offerIds.end(), [this](const unsigned int &offerId1, const unsigned int &offerId2){
+		return !this->offerController_.comparePrice(offerId1, offerId2);
+	});
+
+	this->exchange_->unlockAccountsMutex();
+	this->exchange_->unlockStocksMutex();
 }
 
 void MarketController::resolveOffers(const std::string &symbol)
 {
 	this->stockController_.validateStockSymbol(symbol);
 
-	std::set<Offer *, bool (*)(Offer *, Offer *)> asks = this->getAsks(symbol);
-	std::set<Offer *, bool (*)(Offer *, Offer *)> bids = this->getBids(symbol);
+	std::vector<unsigned int> sortedAsks = this->getSortedAsks(symbol);
+	std::vector<unsigned int> sortedBids = this->getSortedBids(symbol);
 
-	if(asks.size() == 0 | bids.size() == 0){
-		return;
-	}
+	unsigned int lowestAskId = 0;
+	unsigned int highestBidId = 0;
 
-	Offer *lowestAsk = *asks.begin();
-	Offer *highestBid = *bids.begin();
+	while(sortedAsks.size() != 0 & sortedBids.size() != 0){
+		lowestAskId = sortedAsks.back();
+		highestBidId = sortedBids.back();
 
-	this->offerController_.validateOfferId(lowestAsk->offerId);
-	this->offerController_.validateOfferId(highestBid->offerId);
-
-	while(lowestAsk->price <= highestBid->price){
-		this->executeTrade(symbol, lowestAsk, highestBid);
-
-		// Pop back if orders are fulfilled
-		if(lowestAsk->quantity <= 0){
-			lowestAsk->status_ = Offer::FULFILLED;
-			asks.erase(lowestAsk);
-
-			if(asks.size() == 0){
-				break;
-			}
-
-			lowestAsk = *asks.begin();
+		// Break if lowest ask is higher than highest bid, in which case no trading can occur
+		if(this->offerController_.getPrice(lowestAskId) > this->offerController_.getPrice(highestBidId)){
+			break;
 		}
 
-		if(highestBid->quantity <= 0){
-			highestBid->status_ = Offer::FULFILLED;
-			bids.erase(highestBid);
+		this->executeTrade(symbol, lowestAskId, highestBidId);
 
-			if(bids.size() == 0){
-				break;
-			}
+		// Pop back if orders are fulfilled
+		if(this->offerController_.getQuantity(lowestAskId) <= 0){
+			this->offerController_.setStatus(lowestAskId, Offer::FULFILLED);
+			sortedAsks.pop_back();
+		}
 
-			highestBid = *bids.begin();
+		if(this->offerController_.getQuantity(highestBidId) <= 0){
+			this->offerController_.setStatus(highestBidId, Offer::FULFILLED);
+			sortedBids.pop_back();
 		}
 	}
 }
 
-void MarketController::executeTrade(const std::string &symbol, Offer *ask, Offer *bid)
+void MarketController::executeTrade(const std::string &symbol, unsigned int askId, unsigned int bidId)
 {
 	// Get quantity that will be traded
-	unsigned int quantityTraded = std::min(bid->quantity, ask->quantity);
+	unsigned int quantityTraded = std::min(this->offerController_.getQuantity(askId), this->offerController_.getQuantity(bidId));
+
+	float askPrice = this->offerController_.getPrice(askId);
+	float bidPrice = this->offerController_.getPrice(bidId);
 
 	// Adjust buyer account
-	this->accountController_.addShares(bid->accountId_, symbol, quantityTraded);
-	this->accountController_.debit(bid->accountId_, quantityTraded * bid->price);
+	unsigned int buyerAccountId = this->offerController_.getAccountId(bidId);
+	this->accountController_.addShares(buyerAccountId , symbol, quantityTraded);
+	this->accountController_.debit(buyerAccountId, quantityTraded * bidPrice);
 
 	// Adjust seller account
-	this->accountController_.removeShares(ask->accountId_, symbol, quantityTraded);
-	this->accountController_.credit(ask->accountId_, quantityTraded * ask->price);
+	unsigned int sellerAccountId = this->offerController_.getAccountId(askId);
+	this->accountController_.removeShares(sellerAccountId, symbol, quantityTraded);
+	this->accountController_.credit(sellerAccountId, quantityTraded * askPrice);
 
 	// Check if arbitration required
-	float arbitrationProfit = quantityTraded * (bid->price - ask->price);
-	if(bid->price < ask->price){
+	if(askPrice < bidPrice){
+		float arbitrationProfit = quantityTraded * (bidPrice - askPrice);
 		this->exchange_->exchangeAccount_->credit(arbitrationProfit);
 		Logger::log("info", "Arbitration profit: " + std::to_string(arbitrationProfit), true);
 	}
 
 	// Adjust offers
-	ask->quantity -= quantityTraded;
-	bid->quantity -= quantityTraded;
+	this->offerController_.decrementQuantity(askId, quantityTraded);
+	this->offerController_.decrementQuantity(bidId, quantityTraded);
 
 	// Update offer status
-	ask->status_ = Offer::PROCESSING;
-	bid->status_ = Offer::PROCESSING;
+	this->offerController_.setStatus(askId, Offer::PROCESSING);
+	this->offerController_.setStatus(bidId, Offer::PROCESSING);
 
 	// Update volume
 	this->stockController_.incrementVolume(symbol, quantityTraded);
 
 	// Update last trade price
-	this->stockController_.setLastTradePrice(symbol, bid->price);
+	this->stockController_.setLastTradePrice(symbol, bidPrice);
 
-	Logger::log("info", symbol + " " + std::to_string(quantityTraded) + " quantity traded", true);
+	Logger::log("info", symbol + " " + std::to_string(quantityTraded) + " quantity traded @ " + std::to_string(bidPrice), true);
 }
